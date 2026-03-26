@@ -357,6 +357,48 @@ h3 {
   color: var(--muted);
 }
 
+.donate-form-card {
+  margin-top: 1.5rem;
+  padding: 1.1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.field-input {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  background: rgba(8, 12, 24, 0.9);
+  color: var(--text);
+  font: inherit;
+}
+
+.field-input::placeholder {
+  color: color-mix(in srgb, var(--muted) 85%, transparent);
+}
+
+.generated-qr-wrap {
+  padding: 0 1.25rem 1.4rem;
+}
+
+.generated-qr-box {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
 .theme-html {
   --accent: #ff9a66;
   --accent-strong: #ff6a4d;

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Donate | Nishant Kumar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="skill-pages.css">
+</head>
+<body class="theme-office">
+  <header class="site-top">
+    <div class="page-shell top-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">NK</span>
+        <span class="brand-copy">
+          <strong>Nishant Kumar</strong>
+          <span>Custom Donate</span>
+        </span>
+      </a>
+      <nav class="top-nav">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-card">
+        <span class="eyebrow">Custom Donate</span>
+        <h1>Enter an amount and generate a fresh payment QR.</h1>
+        <p>
+          Type any custom amount like <span class="mono">10</span>, <span class="mono">50</span>, or <span class="mono">100</span>.
+          The page will use your existing donation QR as the source, build a matching UPI payment link, and generate a new QR for that amount.
+        </p>
+
+        <div class="donate-form-card">
+          <span class="pill">Option 1</span>
+          <label class="field-label" for="amount-input">Custom Money Amount</label>
+          <input id="amount-input" class="field-input" type="number" min="1" step="1" placeholder="10">
+
+          <label class="field-label top-gap" for="upi-input">UPI ID or UPI Link (optional fallback)</label>
+          <input id="upi-input" class="field-input" type="text" placeholder="Optional: paste UPI ID if auto detect fails">
+
+          <div class="button-row">
+            <button id="generate-button" class="button button-primary" type="button">Generate QR</button>
+            <a id="pay-link" class="button button-secondary" href="#" target="_blank" rel="noreferrer">Open Payment App</a>
+          </div>
+          <p id="donate-status" class="footer-note">Waiting for amount input.</p>
+        </div>
+
+        <div class="donate-form-card">
+          <span class="pill">Option 2</span>
+          <h3>Razorpay Quick Donate</h3>
+          <p>
+            If you want a faster payment route, use Razorpay directly. This option opens your hosted Razorpay payment page in a new tab.
+          </p>
+          <div class="button-row">
+            <a class="button button-primary" href="https://razorpay.me/@Appleofficial01" target="_blank" rel="noreferrer">Open Razorpay</a>
+          </div>
+          <p class="footer-note">
+            Razorpay link: <span class="mono">razorpay.me/@Appleofficial01</span>
+          </p>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <div class="panel-grid">
+          <div class="stat-box">
+            <strong>Source QR</strong>
+            <p>Your saved Google Pay QR is used as the base payment source for the custom amount flow.</p>
+          </div>
+          <div class="mini-box">
+            <span class="pill">How It Works</span>
+            <p>Original QR -> decode payment link -> insert custom amount -> generate new QR.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="media-section">
+      <article class="media-card donate-preview-card">
+        <div class="media-copy">
+          <h3>Generated Payment QR</h3>
+          <p>After entering an amount, a new QR will appear below. The original QR is kept hidden in the page as the source.</p>
+        </div>
+        <div class="generated-qr-wrap">
+          <div id="generated-qr" class="generated-qr-box"></div>
+        </div>
+      </article>
+    </section>
+
+    <img id="source-qr-image" src="../assets/donate-qr.jpeg" alt="" hidden>
+    <canvas id="qr-canvas" hidden></canvas>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="donate.js" defer></script>
+</body>
+</html>
