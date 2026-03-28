@@ -47,10 +47,54 @@
       padding: 1.5rem;
       margin-bottom: 1.25rem;
     }
+    .app-shell {
+      position: relative;
+      padding-top: 1rem;
+    }
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 26px;
+      border-radius: 0 0 18px 18px;
+      background: rgba(7, 13, 24, 0.82);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 0;
+    }
     .hero p { max-width: 68ch; color: var(--muted); }
     .project-card h2 { margin-top: 0; }
     .project-card > p { color: var(--muted); }
     .project-grid { display: grid; gap: 1rem; }
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+    .launcher-card {
+      display: block;
+      padding: 1rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #20324d, #162236);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .launcher-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(94,234,212,0.4);
+    }
+    .launcher-card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .launcher-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .section-anchor { scroll-margin-top: 90px; }
     .memory-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -304,6 +348,7 @@
 </head>
 <body>
   <div class="page">
+    <div class="app-shell">
     <header class="topbar">
       <div>
         <p><a href="../index.html">Portfolio</a> &gt; <a href="../index.html#skills">Skill Pages</a> &gt; CSS</p>
@@ -321,10 +366,17 @@
         This page demonstrates CSS Grid, Flexbox, transforms, 3D perspective, hover states, counters, shapes, and animation timing
         by combining multiple CSS-only experiments into one responsive showcase.
       </p>
+      <div class="launcher-grid">
+        <a class="launcher-card" href="#project-1"><strong>Project 1</strong><span>Card memory grid</span></a>
+        <a class="launcher-card" href="#project-2"><strong>Project 2</strong><span>Button sequence board</span></a>
+        <a class="launcher-card" href="#project-3"><strong>Project 3</strong><span>Snake path animation</span></a>
+        <a class="launcher-card" href="#project-4"><strong>Project 4</strong><span>3D cube interaction</span></a>
+        <a class="launcher-card" href="#project-5"><strong>Project 5</strong><span>Shape motion stage</span></a>
+      </div>
     </section>
 
     <main class="project-grid">
-      <article class="project-card">
+      <article id="project-1" class="project-card section-anchor">
         <h2>Project 1: CSS Card Memory Game</h2>
         <p>12 cards in a 4x3 grid. Each card flips in 3D on hover and reveals a different color and symbol using only CSS transforms and transitions.</p>
         <div class="memory-grid">
@@ -343,7 +395,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article id="project-2" class="project-card section-anchor">
         <h2>Project 2: CSS Button Sequence Game</h2>
         <p>Four bright buttons arranged in a square, each with a different animation, hover glow, and active press behavior. A CSS counter numbers the buttons automatically.</p>
         <div class="sequence-board">
@@ -354,7 +406,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article id="project-3" class="project-card section-anchor">
         <h2>Project 3: CSS Interactive Snake Path Game</h2>
         <p>A visual snake-style path demo using a CSS grid background, animated movement, color gradients, and a glowing food target.</p>
         <div class="snake-board" aria-label="Animated snake board">
@@ -363,7 +415,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article id="project-4" class="project-card section-anchor">
         <h2>Project 4: CSS 3D Interactive Cube</h2>
         <p>A pure CSS cube with six faces, 3D transforms, perspective, automatic load animation, and a hover rotation interaction.</p>
         <div class="cube-scene">
@@ -378,7 +430,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article id="project-5" class="project-card section-anchor">
         <h2>Project 5: CSS SVG-like Drawing with Animations</h2>
         <p>Circle, rectangle, and triangle forms created with borders and simple blocks, animated in sequence with hover interactions and color shifts.</p>
         <div class="shape-stage">
@@ -409,6 +461,7 @@
         <a href="../index.html#contact">Contact</a>
       </div>
     </footer>
+    </div>
   </div>
 </body>
 </html>

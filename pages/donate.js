@@ -6,12 +6,29 @@ const statusText = document.getElementById("donate-status");
 const sourceImage = document.getElementById("source-qr-image");
 const qrCanvas = document.getElementById("qr-canvas");
 const qrTarget = document.getElementById("generated-qr");
+const qrWrap = document.getElementById("generated-qr-wrap");
+const optionOneButton = document.getElementById("option-one-button");
+const optionTwoButton = document.getElementById("option-two-button");
+const optionOnePanel = document.getElementById("option-one-panel");
+const optionTwoPanel = document.getElementById("option-two-panel");
 
 let detectedUpiLink = "";
-let qrInstance = null;
 
 function setStatus(message) {
-  statusText.textContent = message;
+  if (statusText) {
+    statusText.textContent = message;
+  }
+}
+
+function showPanel(panelName) {
+  const showOptionOne = panelName === "option-one";
+  optionOnePanel?.classList.toggle("is-hidden", !showOptionOne);
+  optionTwoPanel?.classList.toggle("is-hidden", showOptionOne);
+  optionOneButton?.classList.toggle("is-active", showOptionOne);
+  optionTwoButton?.classList.toggle("is-active", !showOptionOne);
+  if (!showOptionOne) {
+    qrWrap?.classList.add("is-hidden");
+  }
 }
 
 function decodeSourceQr() {
@@ -30,14 +47,14 @@ function decodeSourceQr() {
 
   if (decoded && decoded.data) {
     detectedUpiLink = decoded.data.trim();
-    setStatus("Base payment QR detected successfully. Enter an amount to generate a new QR.");
+    setStatus("Base payment data is ready. Enter an amount and generate the QR when needed.");
   } else {
-    setStatus("Could not auto-detect the payment data. Paste your UPI ID in the fallback field.");
+    setStatus("Could not auto-detect payment data. Paste your UPI ID manually in Option 1.");
   }
 }
 
 function buildPaymentLink(amount) {
-  const manualValue = upiInput.value.trim();
+  const manualValue = upiInput?.value.trim();
   let base = manualValue || detectedUpiLink;
 
   if (!base) {
@@ -56,12 +73,13 @@ function buildPaymentLink(amount) {
 }
 
 function renderQr(content) {
-  if (!content || typeof QRCode === "undefined") {
+  if (!content || typeof QRCode === "undefined" || !qrTarget) {
     return;
   }
 
   qrTarget.innerHTML = "";
-  qrInstance = new QRCode(qrTarget, {
+  qrWrap?.classList.remove("is-hidden");
+  new QRCode(qrTarget, {
     text: content,
     width: 280,
     height: 280,
@@ -72,7 +90,7 @@ function renderQr(content) {
 }
 
 function handleGenerate() {
-  const amount = amountInput.value.trim();
+  const amount = amountInput?.value.trim();
 
   if (!amount || Number(amount) <= 0) {
     setStatus("Please enter a valid amount like 10, 50, or 100.");
@@ -82,18 +100,29 @@ function handleGenerate() {
   const paymentLink = buildPaymentLink(amount);
 
   if (!paymentLink) {
-    setStatus("Payment source not found yet. Wait for auto-detect or paste your UPI ID manually.");
+    setStatus("Payment source not ready yet. Paste your UPI ID manually if needed.");
     return;
   }
 
   renderQr(paymentLink);
-  payLink.href = paymentLink;
-  setStatus(`Custom QR generated for INR ${amount}. You can scan it or open the payment app button.`);
+  if (payLink) {
+    payLink.href = paymentLink;
+  }
+  setStatus(`Custom QR generated for INR ${amount}.`);
 }
 
-sourceImage.addEventListener("load", decodeSourceQr);
-generateButton.addEventListener("click", handleGenerate);
+optionOneButton?.addEventListener("click", () => {
+  showPanel("option-one");
+  setStatus("Option 1 selected. Enter the amount and generate your QR.");
+});
 
-if (sourceImage.complete) {
+optionTwoButton?.addEventListener("click", () => {
+  showPanel("option-two");
+});
+
+sourceImage?.addEventListener("load", decodeSourceQr);
+generateButton?.addEventListener("click", handleGenerate);
+
+if (sourceImage?.complete) {
   decodeSourceQr();
 }

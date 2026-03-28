@@ -35,8 +35,52 @@
       padding: 1.4rem;
       margin-bottom: 1rem;
     }
+    .app-shell {
+      position: relative;
+      padding-top: 1rem;
+    }
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      height: 26px;
+      border-radius: 0 0 18px 18px;
+      background: rgba(8, 12, 24, 0.84);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 0;
+    }
     .hero p { max-width: 70ch; color: var(--muted); }
     .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.2rem;
+    }
+    .launcher-card {
+      display: block;
+      padding: 1rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #223453, #17223a);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .launcher-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(125,211,252,0.42);
+    }
+    .launcher-card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .launcher-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .section-anchor { scroll-margin-top: 90px; }
     .stat-line, .controls, .scoreboard, .inline-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
     button, input, select {
       font: inherit;
@@ -134,6 +178,7 @@
 </head>
 <body>
   <div class="page">
+    <div class="app-shell">
     <header class="topbar">
       <div>
         <p><a href="../index.html">Portfolio</a> &gt; <a href="../index.html#skills">Skill Pages</a> &gt; JavaScript</p>
@@ -151,10 +196,17 @@
         This page demonstrates event listeners, DOM updates, random generation, local storage, timers, arrays, nested loops,
         conditionals, state management, and game logic through five interactive JavaScript projects.
       </p>
+      <div class="launcher-grid">
+        <a class="launcher-card" href="#game-1"><strong>Project 1</strong><span>Rock Paper Scissors</span></a>
+        <a class="launcher-card" href="#game-2"><strong>Project 2</strong><span>Number Guessing</span></a>
+        <a class="launcher-card" href="#game-3"><strong>Project 3</strong><span>Memory Tiles</span></a>
+        <a class="launcher-card" href="#game-4"><strong>Project 4</strong><span>AI Tic Tac Toe</span></a>
+        <a class="launcher-card" href="#game-5"><strong>Project 5</strong><span>Typing Speed</span></a>
+      </div>
     </section>
 
     <main class="grid">
-      <article class="game-card">
+      <article id="game-1" class="game-card section-anchor">
         <h2>Project 1: Interactive Rock Paper Scissors Game</h2>
         <p class="muted">User vs computer, score tracking, history, random computer choice, and local storage.</p>
         <div class="controls rps-buttons">
@@ -173,7 +225,7 @@
         </div>
       </article>
 
-      <article class="game-card">
+      <article id="game-2" class="game-card section-anchor">
         <h2>Project 2: Number Guessing Game with AI Feedback</h2>
         <p class="muted">Difficulty levels, attempts, best score, timer, hints, input validation, and feedback.</p>
         <div class="controls">
@@ -195,7 +247,7 @@
         </div>
       </article>
 
-      <article class="game-card">
+      <article id="game-3" class="game-card section-anchor">
         <h2>Project 3: Interactive Memory Tiles Game</h2>
         <p class="muted">Tile matching with event delegation, timer functions, state tracking, moves, and difficulty levels.</p>
         <div class="controls">
@@ -210,7 +262,7 @@
         <div id="memory-board" class="memory-board"></div>
       </article>
 
-      <article class="game-card">
+      <article id="game-4" class="game-card section-anchor">
         <h2>Project 4: AI Tic Tac Toe Game</h2>
         <p class="muted">Human vs AI with easy and hard difficulty, board logic, win detection, and score tracking.</p>
         <div class="controls">
@@ -225,7 +277,7 @@
         <div id="ttt-board" class="ttt-board"></div>
       </article>
 
-      <article class="game-card" style="grid-column: 1 / -1;">
+      <article id="game-5" class="game-card section-anchor" style="grid-column: 1 / -1;">
         <h2>Project 5: JavaScript Typing Speed Game</h2>
         <p class="muted">Random typing text, live accuracy, WPM, progress tracking, timer control, and final stats.</p>
         <div class="controls">
@@ -254,6 +306,7 @@
         <a href="../index.html#contact">Contact</a>
       </div>
     </footer>
+    </div>
   </div>
 
   <script>

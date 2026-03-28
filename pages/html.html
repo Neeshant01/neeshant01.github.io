@@ -18,6 +18,24 @@
     .hero { grid-template-columns: 2fr 1fr; align-items: start; }
     .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     .card, .panel, .post, .project-card, .table-wrap, .quote-box, .code-box { background: #fff; border: 1px solid #d8e0ea; border-radius: 12px; padding: 1rem; }
+    .app-shell { position: relative; padding-top: 1rem; }
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 24px;
+      background: #e2e8f0;
+      border: 1px solid #d0dae4;
+      border-top: 0;
+      border-radius: 0 0 18px 18px;
+    }
+    .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .launcher-card { background: #fff; border: 1px solid #d8e0ea; border-radius: 12px; padding: 1rem; display: block; }
+    .launcher-card strong { display: block; margin-bottom: 0.3rem; }
+    .launcher-card span { color: #5b6d80; }
     .project-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; background: #dde6f0; }
     table { width: 100%; border-collapse: collapse; }
     th, td { border: 1px solid #ccd6e0; padding: 0.7rem; text-align: left; }
@@ -32,6 +50,7 @@
   </style>
 </head>
 <body data-page="html-showcase">
+  <div class="app-shell">
   <header role="banner" aria-label="Main header">
     <p class="breadcrumb" aria-label="Breadcrumb">
       <a href="../index.html">Portfolio</a> &gt; <a href="../index.html#skills">Skill Pages</a> &gt; HTML
@@ -58,6 +77,11 @@
           This project proves that a complete, readable, SEO-aware website can be built with semantic HTML5 and only a minimal inline style block.
           The focus is on structure, content hierarchy, accessibility, and correct tag usage.
         </p>
+        <div class="launcher-grid" aria-label="Project chooser">
+          <a class="launcher-card" href="#project-1"><strong>Project 1</strong><span>Semantic portfolio structure</span></a>
+          <a class="launcher-card" href="#project-2"><strong>Project 2</strong><span>Structured content showcase</span></a>
+          <a class="launcher-card" href="#project-3"><strong>Project 3</strong><span>Accessible contact form</span></a>
+        </div>
         <ul class="service-list" aria-label="Highlight list">
           <li>Semantic HTML5</li>
           <li>Accessible structure</li>
@@ -103,17 +127,17 @@
     <section id="portfolio" aria-labelledby="portfolio-title">
       <h2 id="portfolio-title">Portfolio Projects</h2>
       <div class="grid">
-        <article class="project-card" data-project="portfolio-system">
+        <article id="project-1" class="project-card" data-project="portfolio-system">
           <img src="../assets/profile-web.jpg" alt="Profile image used in the portfolio homepage">
           <h3>Portfolio System</h3>
           <p>A multi-page portfolio structure connecting main sections, skill pages, donation flow, and contact details.</p>
         </article>
-        <article class="project-card" data-project="semantic-showcase">
-          <img src="../assets/donate-qr.jpeg" alt="Sample structured image block used to demonstrate semantic content cards">
+        <article id="project-2" class="project-card" data-project="semantic-showcase">
+          <img src="../assets/edit-warm.jpg" alt="Sample structured image block used to demonstrate semantic content cards">
           <h3>Structured Content Showcase</h3>
           <p>Demonstrates semantic cards, proper heading hierarchy, and descriptive image handling in HTML.</p>
         </article>
-        <article class="project-card" data-project="accessible-form">
+        <article id="project-3" class="project-card" data-project="accessible-form">
           <img src="../assets/profile-web.jpg" alt="Profile image used as a sample visual block inside the HTML project layout">
           <h3>Accessible Contact Form</h3>
           <p>HTML5 form controls with labels, required fields, validation, and assistive-friendly instructions.</p>
@@ -283,5 +307,6 @@
       </section>
     </div>
   </footer>
+  </div>
 </body>
 </html>

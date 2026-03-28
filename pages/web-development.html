@@ -42,7 +42,51 @@
       padding: 1.3rem;
       margin-bottom: 1rem;
     }
+    .app-shell {
+      position: relative;
+      padding-top: 1rem;
+    }
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      height: 26px;
+      border-radius: 0 0 18px 18px;
+      background: rgba(8, 12, 24, 0.84);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 0;
+    }
     .hero p, .panel p, .task-card p { color: var(--muted); }
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.2rem;
+    }
+    .launcher-card {
+      display: block;
+      padding: 1rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #223453, #17233a);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .launcher-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(125,211,252,0.42);
+    }
+    .launcher-card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .launcher-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .section-anchor { scroll-margin-top: 90px; }
     .dashboard {
       display: grid;
       grid-template-columns: 360px 1fr;
@@ -130,6 +174,7 @@
 </head>
 <body>
   <div class="page">
+    <div class="app-shell">
     <header class="topbar">
       <div>
         <p><a href="../index.html">Portfolio</a> &gt; <a href="../index.html#skills">Skill Pages</a> &gt; Web Development</p>
@@ -147,9 +192,14 @@
         This task manager demonstrates semantic HTML, responsive CSS, JavaScript state management, search, filtering,
         sorting, local storage persistence, and a user-friendly dashboard layout in one practical project.
       </p>
+      <div class="launcher-grid">
+        <a class="launcher-card" href="#module-overview"><strong>Overview</strong><span>See project summary and launch map.</span></a>
+        <a class="launcher-card" href="#module-add-task"><strong>Add Task</strong><span>Open the form and create new items.</span></a>
+        <a class="launcher-card" href="#module-board"><strong>Task Board</strong><span>Filter, search, and manage the live board.</span></a>
+      </div>
     </section>
 
-    <section class="stats-grid">
+    <section id="module-overview" class="stats-grid section-anchor">
       <article class="stat-card">
         <h3>Progress Tracker</h3>
         <div class="progress-shell"><div id="progress-bar" class="progress-bar"></div></div>
@@ -166,7 +216,7 @@
     </section>
 
     <main class="dashboard">
-      <aside class="panel">
+      <aside id="module-add-task" class="panel section-anchor">
         <h2>Add New Task</h2>
         <form id="task-form">
           <label for="task-title">Task Title</label>
@@ -198,7 +248,7 @@
         </form>
       </aside>
 
-      <section class="panel">
+      <section id="module-board" class="panel section-anchor">
         <h2>Task Controls</h2>
         <div class="filters">
           <div class="toolbar">
@@ -239,6 +289,7 @@
         <a href="../index.html#contact">Contact</a>
       </div>
     </footer>
+    </div>
   </div>
 
   <script>

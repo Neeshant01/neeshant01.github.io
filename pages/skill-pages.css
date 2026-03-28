@@ -306,6 +306,59 @@ h3 {
   font-size: 1.55rem;
 }
 
+.section-anchor {
+  scroll-margin-top: 110px;
+}
+
+.launcher-grid,
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.launcher-card,
+.choice-card {
+  display: block;
+  padding: 1.1rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(8, 12, 24, 0.84));
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.choice-card {
+  width: 100%;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.launcher-card:hover,
+.launcher-card:focus-visible,
+.choice-card:hover,
+.choice-card:focus-visible,
+.choice-card.is-active {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
+  outline: none;
+}
+
+.launcher-card strong,
+.choice-card strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+}
+
+.launcher-card span,
+.choice-card span {
+  color: var(--muted);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -572,6 +625,15 @@ h3 {
   border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
+.generated-qr-wrap.is-hidden,
+.donate-panel-box.is-hidden {
+  display: none;
+}
+
+.donate-panel-box {
+  margin-top: 1rem;
+}
+
 .page-footer {
   margin-top: 1.4rem;
   padding: 1.1rem 1.2rem;
@@ -785,6 +847,8 @@ h3 {
   .gallery-grid,
   .stats-strip,
   .preview-grid,
+  .launcher-grid,
+  .choice-grid,
   .card-grid.two-column,
   .two-column {
     grid-template-columns: 1fr;
