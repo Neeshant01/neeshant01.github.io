@@ -200,8 +200,9 @@
       .dashboard { grid-template-columns: 1fr; }
     }
   </style>
+  <link rel="stylesheet" href="project-app.css">
 </head>
-<body>
+<body class="app-view">
   <div class="page">
     <div class="app-shell">
     <header class="topbar">
@@ -219,12 +220,13 @@
       <h2>Responsive task manager with filtering, progress tracking, and local storage</h2>
       <p>
         This project combines semantic HTML, responsive CSS, and JavaScript state management inside one practical
-        interface for creating, tracking, and reviewing tasks.
+        interface for creating, tracking, and reviewing tasks. Use the chooser below to open the overview, task form,
+        or task board one at a time.
       </p>
       <div class="launcher-grid">
-        <a class="launcher-card" href="#module-overview"><strong>Overview</strong><span>See project summary and launch map.</span></a>
-        <a class="launcher-card" href="#module-add-task"><strong>Add Task</strong><span>Open the form and create new items.</span></a>
-        <a class="launcher-card" href="#module-board"><strong>Task Board</strong><span>Filter, search, and manage the live board.</span></a>
+        <button class="launcher-card project-choice" type="button" data-project-target="module-overview" aria-pressed="true"><strong>Overview</strong><span>See project summary and launch map.</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="module-add-task" aria-pressed="false"><strong>Add Task</strong><span>Open the form and create new items.</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="module-board" aria-pressed="false"><strong>Task Board</strong><span>Filter, search, and manage the live board.</span></button>
       </div>
     </section>
 
@@ -247,24 +249,48 @@
       </article>
     </section>
 
-    <section id="module-overview" class="stats-grid section-anchor">
-      <article class="stat-card">
-        <h3>Progress Tracker</h3>
-        <div class="progress-shell"><div id="progress-bar" class="progress-bar"></div></div>
-        <p id="progress-text" class="small-text">0% complete</p>
-      </article>
-      <article class="stat-card">
-        <h3>Task Summary</h3>
-        <p id="summary-text" class="small-text">0 total tasks | 0 completed | 0 pending</p>
-      </article>
-      <article class="stat-card">
-        <h3>Current Filters</h3>
-        <p id="filter-text" class="small-text">Showing all tasks.</p>
-      </article>
-    </section>
+    <section class="workspace-shell" aria-live="polite">
+      <div class="workspace-top">
+        <div class="workspace-copy">
+          <span class="workspace-chip">Web App Viewer</span>
+          <h2 id="workspace-title">Overview</h2>
+          <p id="workspace-description">See the main task-manager summary before moving into task creation or board controls.</p>
+        </div>
+        <div id="workspace-status" class="workspace-status">Overview is ready to explore.</div>
+      </div>
 
-    <main class="dashboard">
-      <aside id="module-add-task" class="panel section-anchor">
+      <section
+        id="module-overview"
+        class="stats-grid section-anchor workspace-panel"
+        data-project-panel="module-overview"
+        data-project-title="Overview"
+        data-project-summary="See the main task-manager summary before moving into task creation or board controls."
+        data-project-status="Open overview to review progress, task totals, and current filters."
+      >
+        <article class="stat-card">
+          <h3>Progress Tracker</h3>
+          <div class="progress-shell"><div id="progress-bar" class="progress-bar"></div></div>
+          <p id="progress-text" class="small-text">0% complete</p>
+        </article>
+        <article class="stat-card">
+          <h3>Task Summary</h3>
+          <p id="summary-text" class="small-text">0 total tasks | 0 completed | 0 pending</p>
+        </article>
+        <article class="stat-card">
+          <h3>Current Filters</h3>
+          <p id="filter-text" class="small-text">Showing all tasks.</p>
+        </article>
+      </section>
+
+      <aside
+        id="module-add-task"
+        class="panel section-anchor workspace-panel"
+        data-project-panel="module-add-task"
+        data-project-title="Add Task"
+        data-project-summary="Use the form to create a task with title, description, due date, priority, and category."
+        data-project-status="Open add-task to create new items inside the task manager."
+        hidden
+      >
         <h2>Add New Task</h2>
         <form id="task-form">
           <label for="task-title">Task Title</label>
@@ -297,7 +323,15 @@
         </form>
       </aside>
 
-      <section id="module-board" class="panel section-anchor">
+      <section
+        id="module-board"
+        class="panel section-anchor workspace-panel"
+        data-project-panel="module-board"
+        data-project-title="Task Board"
+        data-project-summary="Filter, search, sort, complete, and delete tasks from the live board."
+        data-project-status="Open the task board to manage the current task list."
+        hidden
+      >
         <h2>Task Controls</h2>
         <div class="filters">
           <div class="toolbar">
@@ -326,7 +360,7 @@
 
         <div id="task-list" class="task-list"></div>
       </section>
-    </main>
+    </section>
 
     <footer class="footer">
       <div>
@@ -340,6 +374,8 @@
     </footer>
     </div>
   </div>
+
+  <script src="project-switcher.js" defer></script>
 
   <script>
     const STORAGE_KEY = "task-dashboard-data";

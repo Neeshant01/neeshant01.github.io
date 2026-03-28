@@ -207,8 +207,9 @@
       .ttt-cell { width: 100%; }
     }
   </style>
+  <link rel="stylesheet" href="project-app.css">
 </head>
-<body>
+<body class="app-view">
   <div class="page">
     <div class="app-shell">
     <header class="topbar">
@@ -226,14 +227,15 @@
       <h2>Five browser projects built to practice DOM interaction, timing, state, and logic</h2>
       <p>
         This page demonstrates event listeners, DOM updates, random generation, local storage, timers, arrays, nested loops,
-        conditionals, state management, and game logic through five interactive JavaScript projects.
+        conditionals, state management, and game logic through five interactive JavaScript projects. Choose one project
+        below to open and play it without the full page feeling crowded.
       </p>
       <div class="launcher-grid">
-        <a class="launcher-card" href="#game-1"><strong>Project 1</strong><span>Rock Paper Scissors</span></a>
-        <a class="launcher-card" href="#game-2"><strong>Project 2</strong><span>Number Guessing</span></a>
-        <a class="launcher-card" href="#game-3"><strong>Project 3</strong><span>Memory Tiles</span></a>
-        <a class="launcher-card" href="#game-4"><strong>Project 4</strong><span>Smart Tic Tac Toe</span></a>
-        <a class="launcher-card" href="#game-5"><strong>Project 5</strong><span>Typing Speed</span></a>
+        <button class="launcher-card project-choice" type="button" data-project-target="game-1" aria-pressed="true"><strong>Project 1</strong><span>Rock Paper Scissors</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="game-2" aria-pressed="false"><strong>Project 2</strong><span>Number Guessing</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="game-3" aria-pressed="false"><strong>Project 3</strong><span>Memory Tiles</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="game-4" aria-pressed="false"><strong>Project 4</strong><span>Smart Tic Tac Toe</span></button>
+        <button class="launcher-card project-choice" type="button" data-project-target="game-5" aria-pressed="false"><strong>Project 5</strong><span>Typing Speed</span></button>
       </div>
     </section>
 
@@ -256,8 +258,25 @@
       </article>
     </section>
 
-    <main class="grid">
-      <article id="game-1" class="game-card section-anchor">
+    <section class="workspace-shell" aria-live="polite">
+      <div class="workspace-top">
+        <div class="workspace-copy">
+          <span class="workspace-chip">JavaScript Project Viewer</span>
+          <h2 id="workspace-title">Project 1: Interactive Rock Paper Scissors Game</h2>
+          <p id="workspace-description">A simple browser game using click events, random computer choices, score tracking, and local storage.</p>
+        </div>
+        <div id="workspace-status" class="workspace-status">Project 1 is ready to explore.</div>
+      </div>
+
+      <main class="grid">
+      <article
+        id="game-1"
+        class="game-card section-anchor workspace-panel"
+        data-project-panel="game-1"
+        data-project-title="Project 1: Interactive Rock Paper Scissors Game"
+        data-project-summary="A simple browser game using click events, random computer choices, score tracking, and local storage."
+        data-project-status="Open project 1 to play Rock Paper Scissors."
+      >
         <h2>Project 1: Interactive Rock Paper Scissors Game</h2>
         <p class="muted">User vs computer, score tracking, history, random computer choice, and local storage.</p>
         <div class="controls rps-buttons">
@@ -276,7 +295,15 @@
         </div>
       </article>
 
-      <article id="game-2" class="game-card section-anchor">
+      <article
+        id="game-2"
+        class="game-card section-anchor workspace-panel"
+        data-project-panel="game-2"
+        data-project-title="Project 2: Number Guessing Game"
+        data-project-summary="A number challenge with difficulty levels, hints, timing, best score tracking, and input validation."
+        data-project-status="Open project 2 to play the number guessing challenge."
+        hidden
+      >
         <h2>Project 2: Number Guessing Game</h2>
         <p class="muted">Difficulty levels, attempts, best score, timer, hints, input validation, and feedback.</p>
         <div class="controls">
@@ -298,7 +325,15 @@
         </div>
       </article>
 
-      <article id="game-3" class="game-card section-anchor">
+      <article
+        id="game-3"
+        class="game-card section-anchor workspace-panel"
+        data-project-panel="game-3"
+        data-project-title="Project 3: Interactive Memory Tiles Game"
+        data-project-summary="A tile-matching game using shuffled arrays, timer functions, move tracking, and state management."
+        data-project-status="Open project 3 to play the memory tile game."
+        hidden
+      >
         <h2>Project 3: Interactive Memory Tiles Game</h2>
         <p class="muted">Tile matching with event delegation, timer functions, state tracking, moves, and difficulty levels.</p>
         <div class="controls">
@@ -314,7 +349,15 @@
         <div id="memory-board" class="memory-board"></div>
       </article>
 
-      <article id="game-4" class="game-card section-anchor">
+      <article
+        id="game-4"
+        class="game-card section-anchor workspace-panel"
+        data-project-panel="game-4"
+        data-project-title="Project 4: Smart Tic Tac Toe"
+        data-project-summary="A rule-based Tic Tac Toe game with easy and hard computer modes, win detection, and score tracking."
+        data-project-status="Open project 4 to play against the computer."
+        hidden
+      >
         <h2>Project 4: Smart Tic Tac Toe</h2>
         <p class="muted">Human vs computer with easy and hard difficulty, board logic, win detection, and score tracking.</p>
         <div class="controls">
@@ -329,7 +372,16 @@
         <div id="ttt-board" class="ttt-board"></div>
       </article>
 
-      <article id="game-5" class="game-card section-anchor" style="grid-column: 1 / -1;">
+      <article
+        id="game-5"
+        class="game-card section-anchor workspace-panel"
+        style="grid-column: 1 / -1;"
+        data-project-panel="game-5"
+        data-project-title="Project 5: JavaScript Typing Speed Game"
+        data-project-summary="A typing challenge with live WPM, accuracy, progress tracking, and timer-based scoring."
+        data-project-status="Open project 5 to start the typing challenge."
+        hidden
+      >
         <h2>Project 5: JavaScript Typing Speed Game</h2>
         <p class="muted">Random typing text, live accuracy, WPM, progress tracking, timer control, and final stats.</p>
         <div class="controls">
@@ -347,6 +399,7 @@
         </div>
       </article>
     </main>
+    </section>
 
     <footer class="footer">
       <div>
@@ -360,6 +413,8 @@
     </footer>
     </div>
   </div>
+
+  <script src="project-switcher.js" defer></script>
 
   <script>
     const storage = {
@@ -492,7 +547,7 @@
     const memoryDifficulty = document.getElementById("memory-difficulty");
     const memoryStats = document.getElementById("memory-stats");
     const memoryStatus = document.getElementById("memory-status");
-    const memoryIcons = ["ðŸ€", "ðŸš€", "ðŸŽ¯", "ðŸ“˜", "ðŸ’¡", "âš™ï¸", "ðŸ§ ", "ðŸŒŸ"];
+    const memoryIcons = ["A", "B", "C", "D", "E", "F", "G", "H"];
     let memoryState = { tiles: [], first: null, second: null, lock: false, matches: 0, moves: 0, seconds: 0, timer: null };
 
     function updateMemoryStats() {
