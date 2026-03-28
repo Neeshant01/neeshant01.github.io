@@ -826,9 +826,42 @@ h3 {
 
   .nav-links {
     width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a {
+    flex: 0 0 auto;
   }
 
   .header-cta {
     width: 100%;
+  }
+
+  .hero-copy,
+  .content-card,
+  .contact-card,
+  .support-card {
+    padding: 1.35rem;
+    border-radius: 24px;
+  }
+
+  .capability-card,
+  .skill-card,
+  .highlight-card,
+  .project-card,
+  .workflow-card {
+    padding: 1.15rem;
+    border-radius: 22px;
+  }
+
+  .profile-meta h2 {
+    font-size: 1.3rem;
   }
 }
