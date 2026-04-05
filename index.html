@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nishant Kumar</title>
-  <meta name="description" content="Simple personal page of Nishant Kumar.">
+  <title>Website Under Maintenance</title>
+  <meta name="description" content="Website under maintenance. Please check back soon.">
   <style>
     :root {
       color-scheme: dark;
@@ -19,15 +19,113 @@
       min-height: 100vh;
       display: grid;
       place-items: center;
+      overflow: hidden;
       padding: 24px;
-      background: #050505;
-      color: #f5f5f5;
+      background:
+        radial-gradient(circle at top left, rgba(0, 217, 255, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(0, 255, 170, 0.14), transparent 24%),
+        linear-gradient(180deg, #030507 0%, #060a10 45%, #020304 100%);
+      color: #f5fbff;
       font-family: Arial, sans-serif;
       text-align: center;
     }
 
-    main {
-      max-width: 560px;
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.7;
+      animation: float 10s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 240px;
+      height: 240px;
+      top: 10%;
+      left: -60px;
+      background: rgba(0, 217, 255, 0.18);
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      right: -80px;
+      bottom: 5%;
+      background: rgba(0, 255, 170, 0.14);
+      animation-delay: -4s;
+    }
+
+    .panel {
+      position: relative;
+      width: min(100%, 620px);
+      padding: 40px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      background: rgba(7, 12, 18, 0.78);
+      backdrop-filter: blur(16px);
+      box-shadow:
+        0 0 0 1px rgba(0, 217, 255, 0.08),
+        0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      border: 1px solid rgba(0, 217, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(0, 217, 255, 0.08);
+      color: #90f6ff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #67f7ff;
+      box-shadow: 0 0 16px #67f7ff;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .ring {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-top-color: #67f7ff;
+      border-right-color: #6effc8;
+      animation: spin 4s linear infinite;
+    }
+
+    .ring::before,
+    .ring::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+
+    .ring::before {
+      border-left-color: rgba(103, 247, 255, 0.7);
+      animation: spinReverse 2.8s linear infinite;
+    }
+
+    .ring::after {
+      inset: 28px;
+      background: radial-gradient(circle, rgba(103, 247, 255, 0.22), transparent 70%);
+      animation: pulse 1.8s ease-in-out infinite;
     }
 
     h1,
@@ -36,27 +134,123 @@
     }
 
     h1 {
-      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-size: clamp(2.3rem, 7vw, 4.4rem);
+      line-height: 1.05;
       margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .subtitle {
-      font-size: clamp(1.1rem, 3vw, 1.5rem);
-      margin-bottom: 12px;
-      color: #d4d4d4;
+      margin-bottom: 18px;
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      color: #d3e4ef;
     }
 
-    .tagline {
+    .message {
+      color: #93a4af;
       font-size: 1rem;
-      color: #a3a3a3;
+    }
+
+    .loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      color: #84f7ff;
+      font-size: 0.95rem;
+    }
+
+    .loading span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .loading span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .loading span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spinReverse {
+      from {
+        transform: rotate(360deg);
+      }
+
+      to {
+        transform: rotate(0deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: scale(1.12);
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounce {
+      0%,
+      80%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.45;
+      }
+
+      40% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(24px);
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Hi, I am Nishant Kumar</h1>
-    <p class="subtitle">I am a Student Developer</p>
-    <p class="tagline">Simple idea and better expression</p>
+  <main class="panel">
+    <div class="status">
+      <span class="dot"></span>
+      <span>Maintenance Mode</span>
+    </div>
+    <div class="ring" aria-hidden="true"></div>
+    <h1>Website Under Maintenance</h1>
+    <p class="subtitle">We are making some updates.</p>
+    <p class="message">Please check back soon.</p>
+    <div class="loading" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </main>
 </body>
 </html>
