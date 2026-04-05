@@ -3,552 +3,274 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nishant Kumar</title>
-  <meta name="description" content="Simple personal webpage for Nishant Kumar.">
-  <style>
-    :root {
-      color-scheme: light;
-      --bg: #f6f7fb;
-      --panel: #ffffff;
-      --border: #e6e8ef;
-      --text: #111827;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --accent-soft: #eff6ff;
-      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent 25%),
-        linear-gradient(180deg, #fafbff 0%, #f4f7fb 100%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    .container {
-      width: min(980px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 40px;
-    }
-
-    .nav,
-    .section,
-    .hero-card,
-    .project-card,
-    .donate-card,
-    .contact-card,
-    .qr-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      position: sticky;
-      top: 14px;
-      z-index: 10;
-    }
-
-    .brand {
-      font-weight: 700;
-      font-size: 1.05rem;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      color: var(--muted);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-      gap: 20px;
-      align-items: stretch;
-      margin-bottom: 24px;
-    }
-
-    .hero-card,
-    .section,
-    .project-card,
-    .donate-card,
-    .contact-card,
-    .qr-card {
-      padding: 24px;
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      color: var(--accent);
-      font-size: 0.88rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      line-height: 1;
-      margin-bottom: 12px;
-    }
-
-    h2 {
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      margin-bottom: 10px;
-    }
-
-    .hero-subtitle,
-    .section-text,
-    .project-text,
-    .helper,
-    .contact-note,
-    .qr-card p,
-    .hero-points span {
-      color: var(--muted);
-    }
-
-    .hero-subtitle {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .hero-actions,
-    .project-actions,
-    .donate-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .hero-points {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .hero-points span {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 14px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background: var(--accent-soft);
-      color: var(--accent);
-      border-color: #bfdbfe;
-    }
-
-    .hero-side {
-      display: grid;
-      place-items: center;
-      min-height: 100%;
-      text-align: center;
-    }
-
-    .hero-circle {
-      width: 170px;
-      height: 170px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle, #ffffff 30%, #dbeafe 31%, #eff6ff 65%, #ffffff 66%);
-      border: 1px solid #dbeafe;
-      color: var(--accent);
-      font-size: 2rem;
-      font-weight: 700;
-      box-shadow: inset 0 0 0 16px rgba(37, 99, 235, 0.06);
-    }
-
-    .section {
-      margin-bottom: 24px;
-    }
-
-    .project-list {
-      display: grid;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .project-card h3 {
-      margin-bottom: 8px;
-    }
-
-    .project-tag {
-      display: inline-flex;
-      margin-top: 14px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .donate-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 280px;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .amount-field,
-    input,
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #fff;
-      color: var(--text);
-    }
-
-    .amount-field {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 14px;
-      min-height: 56px;
-    }
-
-    .amount-field span {
-      font-weight: 700;
-    }
-
-    .amount-field input {
-      border: 0;
-      min-height: auto;
-      padding: 0;
-      outline: none;
-    }
-
-    .qr-card {
-      display: grid;
-      place-items: center;
-      text-align: center;
-    }
-
-    .qr-card img {
-      width: min(100%, 220px);
-      aspect-ratio: 1;
-      padding: 10px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-    }
-
-    .qr-amount {
-      margin: 14px 0 6px;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .contact-grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    input,
-    textarea {
-      min-height: 52px;
-      padding: 12px 14px;
-      outline: none;
-    }
-
-    textarea {
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    .footer {
-      padding: 4px 0 0;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    @media (max-width: 760px) {
-      .nav,
-      .hero,
-      .donate-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
-        position: static;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .container {
-        width: min(100% - 20px, 100%);
-        padding-top: 14px;
-      }
-    }
-  </style>
+  <title>NEON PHANTOM // Anime Hacker Universe</title>
+  <meta
+    name="description"
+    content="NEON PHANTOM is a movie and anime inspired hacker website with Home, About, Services, Project, Donate, and Contact sections."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header class="nav">
-      <div class="brand">Nishant Kumar</div>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#projects">Projects</a>
-        <a href="#donate">Donate</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+  <div class="noise"></div>
+  <canvas id="matrix-rain" aria-hidden="true"></canvas>
 
-    <main>
-      <section class="hero">
-        <div class="hero-card">
-          <p class="eyebrow">Simple Web Page</p>
-          <h1>Nishant Kumar</h1>
-          <p class="hero-subtitle">
-            Welcome to my simple website. Here you can see my projects, support me with a donation,
-            and contact me directly.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#projects">View Projects</a>
-            <a class="btn btn-secondary" href="#contact">Contact Me</a>
-          </div>
-          <div class="hero-points">
-            <span>Clean white theme</span>
-            <span>Simple sections</span>
-            <span>WhatsApp contact</span>
-          </div>
+  <header class="site-header">
+    <a class="brand" href="#home">
+      <span class="brand-mark"></span>
+      <span class="brand-text">NEON PHANTOM</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#project">Project</a>
+      <a href="#donate">Donate</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow">CITY GRID // ONLINE</p>
+        <h1>
+          Anime hacker style
+          <span>with cinematic neon energy.</span>
+        </h1>
+        <p class="lede">
+          NEON PHANTOM is a fictional underground signal built for people who love
+          midnight terminals, digital rain, anime tension, and futuristic hacker aesthetics.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#project">Watch The Project</a>
+          <a class="button secondary" href="#donate">Support The Signal</a>
         </div>
 
-        <aside class="hero-card hero-side">
-          <div>
-            <div class="hero-circle">NK</div>
-            <p class="hero-subtitle" style="margin:16px 0 0;">Simple and clean personal page</p>
-          </div>
-        </aside>
-      </section>
-
-      <section class="section" id="projects">
-        <p class="eyebrow">Projects</p>
-        <h2>My Projects</h2>
-        <p class="section-text">A simple section where your projects can be shown.</p>
-
-        <div class="project-list">
-          <article class="project-card">
-            <h3>Projects Will Be Added Here</h3>
-            <p class="project-text">
-              This section is ready. When you want, I can add your real project cards here one by one.
-            </p>
-            <span class="project-tag">Ready for new projects</span>
-          </article>
+        <div class="hero-tags">
+          <span>Cyberpunk Mood</span>
+          <span>Anime UI Language</span>
+          <span>Movie Trailer Vibe</span>
         </div>
-      </section>
 
-      <section class="section" id="donate">
-        <p class="eyebrow">Donate</p>
-        <h2>Support Me</h2>
-        <p class="section-text">Enter an amount and scan the QR code or open your UPI app.</p>
-
-        <div class="donate-grid">
-          <div class="donate-card">
-            <label for="amount">Donation Amount</label>
-            <div class="amount-field">
-              <span>₹</span>
-              <input id="amount" type="number" min="1" step="1" value="100" inputmode="numeric">
-            </div>
-            <div class="donate-actions">
-              <button class="btn btn-primary" type="button" id="refresh-qr">Generate QR</button>
-              <a class="btn btn-secondary" id="upi-link" href="#" rel="noopener noreferrer">Pay via UPI App</a>
-            </div>
-            <p class="helper" style="margin-top:14px;">QR code updates automatically with the amount.</p>
+        <div class="hero-stats">
+          <div class="stat-chip">
+            <strong data-count="12">0</strong>
+            <span>active scenes</span>
           </div>
-
-          <div class="qr-card">
-            <img id="qr-image" src="" alt="UPI QR code">
-            <div class="qr-amount" id="amount-text">₹100</div>
-            <p>Scan this QR in any UPI app</p>
+          <div class="stat-chip">
+            <strong data-count="24">0</strong>
+            <span>signal drops</span>
+          </div>
+          <div class="stat-chip">
+            <strong data-count="99">0</strong>
+            <span>neon intensity</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section" id="contact">
-        <p class="eyebrow">Contact</p>
-        <h2>Contact Me</h2>
-        <p class="section-text">Fill the form and WhatsApp will open with your message.</p>
+      <div class="hero-panel terminal" data-reveal>
+        <div class="terminal-bar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
 
-        <form class="contact-card contact-grid" id="contact-form">
-          <div>
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" placeholder="Your name" required>
+        <div class="terminal-body">
+          <p class="terminal-label">phantom console</p>
+          <div class="terminal-output" id="terminal-output">
+            <p>&gt; syncing night-city overlays...</p>
+            <p>&gt; loading phantom masks and signal ghosts...</p>
+            <p>&gt; calibrating cinematic glitch engine...</p>
           </div>
-
-          <div>
-            <label for="reason">Reason</label>
-            <input id="reason" name="reason" type="text" placeholder="Reason for contact" required>
+          <div class="terminal-input">
+            <span>ghost@neon-city:~$</span>
+            <span id="typed-command"></span>
+            <span class="cursor"></span>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <div>
-            <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="Write your message" required></textarea>
+    <section class="section strip" data-reveal>
+      <p>digital rain</p>
+      <p>anime tension</p>
+      <p>rogue city lights</p>
+      <p>phantom code</p>
+      <p>midnight broadcast</p>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="section-copy" data-reveal>
+        <p class="eyebrow">ABOUT</p>
+        <h2>A fictional signal from a neon city that never sleeps.</h2>
+        <p>
+          This website is built around the feeling of a hacker scene from a sci-fi
+          movie or anime opening. It mixes dark city tones, glowing interface cards,
+          digital motion, and a dramatic screen presence that feels stylized instead of plain.
+        </p>
+      </div>
+
+      <div class="story-panel" data-reveal>
+        <p class="story-kicker">Broadcast Log</p>
+        <p class="story-line">
+          "When the skyline goes silent, the phantom channel wakes up."
+        </p>
+        <p class="story-note">
+          Crafted as a visual world: terminals, glitch overlays, sharp typography, and
+          a clean one-page structure with the exact sections you asked for.
+        </p>
+      </div>
+    </section>
+
+    <section class="section services-section" id="services">
+      <div class="section-copy" data-reveal>
+        <p class="eyebrow">SERVICES</p>
+        <h2>Designed like a hacker anime interface, section by section.</h2>
+      </div>
+
+      <div class="cards">
+        <article class="card" data-reveal>
+          <span class="card-index">01</span>
+          <h3>Neon Interface Design</h3>
+          <p>Glow-rich layouts, scanline textures, and cinematic composition for a bold hacker look.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-index">02</span>
+          <h3>Terminal Motion</h3>
+          <p>Animated command lines, rising counters, and digital rain that make the page feel alive.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-index">03</span>
+          <h3>Anime Worldbuilding</h3>
+          <p>Section copy that feels like a futuristic story universe instead of generic website filler.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-index">04</span>
+          <h3>Responsive Experience</h3>
+          <p>A strong desktop and mobile presentation so the vibe survives on every screen size.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section project-section" id="project">
+      <div class="project-main" data-reveal>
+        <p class="eyebrow">PROJECT</p>
+        <h2>Project: Phantom Signal</h2>
+        <p>
+          A cinematic one-page experience that feels like the title screen of a cyberpunk film.
+          The project combines a neon hero, story-driven cards, ambient motion, and a donation call
+          for fans who want to keep the signal alive.
+        </p>
+
+        <div class="project-grid">
+          <div class="project-card">
+            <span>Visual Mode</span>
+            <strong>Movie + Anime</strong>
           </div>
-
-          <div class="donate-actions" style="margin-top:0;">
-            <button class="btn btn-primary" type="submit">Send on WhatsApp</button>
+          <div class="project-card">
+            <span>Theme</span>
+            <strong>Hacker Universe</strong>
           </div>
+          <div class="project-card">
+            <span>Structure</span>
+            <strong>Single Page Flow</strong>
+          </div>
+        </div>
+      </div>
 
-          <p class="contact-note" id="contact-status">Your message will be prepared in WhatsApp.</p>
-        </form>
-      </section>
-    </main>
+      <aside class="timeline-panel" data-reveal>
+        <p class="timeline-title">Scene Sequence</p>
+        <div class="timeline-item">
+          <span>01</span>
+          <p>Home opens with terminal energy and a full-screen neon presence.</p>
+        </div>
+        <div class="timeline-item">
+          <span>02</span>
+          <p>About and Services deepen the universe and explain the visual language.</p>
+        </div>
+        <div class="timeline-item">
+          <span>03</span>
+          <p>Project, Donate, and Contact close the page like a final transmission.</p>
+        </div>
+      </aside>
+    </section>
 
-    <footer class="footer">
-      <p>Made for Nishant Kumar</p>
-    </footer>
-  </div>
+    <section class="section donate-section" id="donate">
+      <div class="section-copy" data-reveal>
+        <p class="eyebrow">DONATE</p>
+        <h2>Keep the phantom channel running.</h2>
+        <p>
+          Support the project like a fan backing an independent cyberpunk universe.
+          The buttons are styled as donation tiers and can be connected to real payment links later.
+        </p>
+      </div>
 
-  <script>
-    const whatsappNumber = "919279080614";
-    const upiId = "92790806142@POSTBANK";
-    const payeeName = "Nishant Kumar";
-    const currency = "INR";
+      <div class="donate-grid">
+        <article class="donate-card" data-reveal>
+          <p class="donate-label">Signal Drop</p>
+          <strong>$5</strong>
+          <span>For small support and good energy.</span>
+          <button class="button secondary donate-button" type="button">Support Signal</button>
+        </article>
 
-    const amountInput = document.getElementById("amount");
-    const qrImage = document.getElementById("qr-image");
-    const amountText = document.getElementById("amount-text");
-    const upiLink = document.getElementById("upi-link");
-    const refreshQrButton = document.getElementById("refresh-qr");
-    const contactForm = document.getElementById("contact-form");
-    const contactStatus = document.getElementById("contact-status");
+        <article class="donate-card featured" data-reveal>
+          <p class="donate-label">Phantom Core</p>
+          <strong>$25</strong>
+          <span>For fans who want to power the main broadcast.</span>
+          <button class="button primary donate-button" type="button">Boost The Core</button>
+        </article>
 
-    function formatAmount(amount) {
-      return new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency,
-        maximumFractionDigits: 0
-      }).format(amount);
-    }
+        <article class="donate-card" data-reveal>
+          <p class="donate-label">Night City Backer</p>
+          <strong>$50</strong>
+          <span>For supporters funding the next scene and visual upgrades.</span>
+          <button class="button secondary donate-button" type="button">Fund Next Scene</button>
+        </article>
+      </div>
+    </section>
 
-    function getAmount() {
-      const value = Number(amountInput.value);
-      return Number.isFinite(value) && value > 0 ? value : 100;
-    }
+    <section class="section contact-section" id="contact">
+      <div class="contact-copy" data-reveal>
+        <p class="eyebrow">CONTACT</p>
+        <h2>Send a message through the neon channel.</h2>
+        <p>
+          Use this section for inquiries, collaborations, fan messages, or future project requests.
+        </p>
+      </div>
 
-    function buildUpiUrl(amount) {
-      const params = new URLSearchParams({
-        pa: upiId,
-        pn: payeeName,
-        am: String(amount),
-        cu: currency
-      });
+      <form class="contact-form" data-reveal>
+        <label>
+          Name
+          <input type="text" name="name" placeholder="Your name">
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@example.com">
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="5" placeholder="Write your message here..."></textarea>
+        </label>
+        <button class="button primary" type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
 
-      return `upi://pay?${params.toString()}`;
-    }
+  <footer class="site-footer">
+    <p>NEON PHANTOM // movie-inspired anime hacker visuals for a cinematic one-page experience.</p>
+  </footer>
 
-    function updateDonateUi() {
-      const amount = getAmount();
-      const upiUrl = buildUpiUrl(amount);
-      const qrUrl = new URL("https://api.qrserver.com/v1/create-qr-code/");
-
-      qrUrl.search = new URLSearchParams({
-        size: "220x220",
-        data: upiUrl
-      }).toString();
-
-      amountText.textContent = formatAmount(amount);
-      upiLink.href = upiUrl;
-      qrImage.src = qrUrl.toString();
-      qrImage.alt = `UPI QR code for ${formatAmount(amount)}`;
-    }
-
-    function handleContactSubmit(event) {
-      event.preventDefault();
-
-      const formData = new FormData(contactForm);
-      const text = [
-        "Hello Nishant,",
-        "",
-        `Name: ${formData.get("name")}`,
-        `Reason: ${formData.get("reason")}`,
-        "",
-        "Message:",
-        formData.get("message")
-      ].join("\n");
-
-      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
-      const popup = window.open(url, "_blank", "noopener");
-
-      if (popup) {
-        contactStatus.textContent = "WhatsApp opened. Please review and send the message there.";
-      } else {
-        contactStatus.textContent = "WhatsApp could not open automatically. Please allow popups and try again.";
-      }
-    }
-
-    updateDonateUi();
-    amountInput.addEventListener("input", updateDonateUi);
-    refreshQrButton.addEventListener("click", updateDonateUi);
-    contactForm.addEventListener("submit", handleContactSubmit);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
