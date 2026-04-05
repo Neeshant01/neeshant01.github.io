@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nishant Kumar | Personal Website</title>
+  <title>Nishant Kumar | Frontend and Automation Projects</title>
   <meta
     name="description"
-    content="Personal site of Nishant Kumar with a clean homepage, project updates, and contact links."
+    content="Portfolio of Nishant Kumar featuring responsive websites, verified GitHub projects, and automation experiments."
   >
   <meta name="author" content="Nishant Kumar">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#091018">
+  <meta name="theme-color" content="#0d1422">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Nishant Kumar | Personal Website">
+  <meta property="og:title" content="Nishant Kumar | Frontend and Automation Projects">
   <meta
     property="og:description"
-    content="A clean personal site with profile details, project updates, and contact links."
+    content="Responsive portfolio website showcasing frontend work, verified GitHub projects, and AI-assisted ideas."
   >
   <meta property="og:url" content="https://neeshant01.github.io/">
   <meta property="og:image" content="https://neeshant01.github.io/assets/profile-web.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Nishant Kumar | Personal Website">
+  <meta name="twitter:title" content="Nishant Kumar | Frontend and Automation Projects">
   <meta
     name="twitter:description"
-    content="A clean personal site with profile details, project updates, and contact links."
+    content="Responsive portfolio website showcasing frontend work, verified GitHub projects, and AI-assisted ideas."
   >
   <meta name="twitter:image" content="https://neeshant01.github.io/assets/profile-web.jpg">
   <link rel="canonical" href="https://neeshant01.github.io/">
@@ -31,69 +31,130 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
     rel="stylesheet"
   >
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="page-glow" aria-hidden="true"></div>
+  <div class="page-grid" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="shell nav-shell">
-      <a class="brand" href="#home">Nishant Kumar</a>
+      <a class="brand" href="#home">
+        <span class="brand-mark">NK</span>
+        <span class="brand-copy">
+          <strong>Nishant Kumar</strong>
+          <span>Portfolio</span>
+        </span>
+      </a>
+
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#home" data-nav="home">Home</a>
         <a href="#about" data-nav="about">About</a>
         <a href="#projects" data-nav="projects">Projects</a>
         <a href="#contact" data-nav="contact">Contact</a>
-        <a href="pages/donate.html?v=20260328c">Donate</a>
+        <a class="nav-support" href="pages/donate.html?v=20260405b">Support</a>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <section id="home" class="hero-section">
       <div class="shell hero-grid">
         <div class="hero-copy reveal">
-          <span class="eyebrow">Patna, Bihar, India</span>
-          <h1>A simple space for my profile and projects.</h1>
+          <span class="eyebrow">Portfolio / Patna, Bihar, India</span>
+          <h1>I build <span class="accent-text">clean web experiences</span> and practical developer tools.</h1>
           <p class="hero-text">
-            I am Nishant Kumar. I use this site to share who I am, keep my work in one place, and add new projects as
-            I build them.
+            I am Nishant Kumar, a student developer who learns by shipping projects. This site brings together my
+            profile, verified GitHub work, and the frontend polish I am building step by step.
           </p>
+
           <div class="terminal-line">
             <span class="terminal-prompt">&gt;</span>
             <span id="typed-text">Loading...</span>
             <span class="cursor" aria-hidden="true"></span>
           </div>
+
           <div class="hero-actions">
-            <a class="button button-primary" href="#projects">View Projects</a>
-            <a class="button button-secondary" href="#contact">Get In Touch</a>
+            <a class="button button-primary" href="#projects">See Verified Projects</a>
+            <a class="button button-secondary" href="#contact">Contact Me</a>
           </div>
-          <div class="hero-meta">
-            <div class="meta-card">
-              <strong>Type</strong>
-              <span>Personal site</span>
-            </div>
-            <div class="meta-card">
-              <strong>Includes</strong>
-              <span>Profile and projects</span>
-            </div>
-            <div class="meta-card">
-              <strong>Built With</strong>
-              <span>HTML, CSS, JavaScript</span>
-            </div>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <span>Featured</span>
+              <strong>3 verified repos</strong>
+              <p>Only projects I checked locally are featured here right now.</p>
+            </article>
+            <article class="metric-card">
+              <span>Core Stack</span>
+              <strong>HTML, React, Python</strong>
+              <p>Frontend practice mixed with automation and assistant-style experiments.</p>
+            </article>
+            <article class="metric-card">
+              <span>Current Mode</span>
+              <strong>Learn by building</strong>
+              <p>Small iterations, clearer presentation, and better polish every time.</p>
+            </article>
           </div>
         </div>
 
-        <div class="portrait-card reveal">
-          <div class="portrait-badge">Profile</div>
-          <div class="portrait-frame">
-            <img src="assets/profile-web.jpg" alt="Portrait of Nishant Kumar" fetchpriority="high">
+        <div class="hero-side reveal">
+          <article class="portrait-card">
+            <div class="portrait-head">
+              <span class="status-pill">Open to internships and collaborations</span>
+              <span class="signal-pill">Build / Learn / Improve</span>
+            </div>
+
+            <div class="portrait-frame">
+              <img src="assets/profile-web.jpg" alt="Portrait of Nishant Kumar holding a tablet" fetchpriority="high">
+            </div>
+
+            <div class="portrait-copy">
+              <strong>Focused on practical progress.</strong>
+              <p>
+                I like interfaces that feel readable, responsive, and intentional, whether the project is a website, a
+                dashboard, or a small automation system.
+              </p>
+            </div>
+          </article>
+
+          <div class="mini-grid">
+            <article class="mini-card">
+              <strong>Now Building</strong>
+              <p>Automation flows, project presentation, and stronger frontend polish.</p>
+            </article>
+            <article class="mini-card">
+              <strong>What Matters</strong>
+              <p>Clarity, responsiveness, and projects that actually hold together when checked.</p>
+            </article>
           </div>
-          <p class="portrait-note">Profile photo</p>
         </div>
+      </div>
+
+      <div class="shell signal-bar reveal">
+        <article class="signal-item">
+          <span class="signal-label">Direction</span>
+          <strong>Frontend first</strong>
+          <p class="signal-value">Interfaces that stay clean across desktop and mobile.</p>
+        </article>
+        <article class="signal-item">
+          <span class="signal-label">Projects</span>
+          <strong>Automation ideas</strong>
+          <p class="signal-value">Tools that reduce repetitive steps and organize workflows better.</p>
+        </article>
+        <article class="signal-item">
+          <span class="signal-label">Verification</span>
+          <strong>Checked locally</strong>
+          <p class="signal-value">Only repos I could actually test are shown below.</p>
+        </article>
+        <article class="signal-item">
+          <span class="signal-label">Support</span>
+          <strong>One clean hub</strong>
+          <p class="signal-value">Projects, contact links, and support flow connected in one site.</p>
+        </article>
       </div>
     </section>
 
@@ -101,72 +162,136 @@
       <div class="shell section-grid">
         <article class="panel reveal">
           <span class="eyebrow">About</span>
-          <h2>A clear personal homepage.</h2>
+          <h2>Simple ideas, better execution.</h2>
           <p>
-            The goal of this site is simple: keep my profile easy to read and easy to update.
+            My focus is not only learning tools, but learning how to present work clearly. I enjoy building interfaces
+            that feel smooth, readable, and easy to explore on both mobile and desktop.
           </p>
           <p>
-            The project section below is connected to a separate file, so I can add new work without changing the full
-            homepage layout.
+            Right now I am spending most of my time on frontend practice, automation workflows, and small AI-assisted
+            systems that turn experiments into something people can actually use.
           </p>
         </article>
 
         <aside class="panel panel-soft reveal">
-          <span class="eyebrow">Quick Info</span>
+          <span class="eyebrow">Quick Snapshot</span>
           <ul class="detail-list">
             <li><strong>Name</strong><span>Nishant Kumar</span></li>
-            <li><strong>Role</strong><span>Student</span></li>
+            <li><strong>Role</strong><span>Student developer</span></li>
             <li><strong>Base</strong><span>Patna, Bihar, India</span></li>
-            <li><strong>Focus</strong><span>Learning and building</span></li>
+            <li><strong>Focus</strong><span>Frontend, automation, and project storytelling</span></li>
+            <li><strong>Tools</strong><span>HTML, CSS, JavaScript, React, Python</span></li>
           </ul>
         </aside>
+      </div>
+
+      <div class="shell focus-grid">
+        <article class="focus-card reveal">
+          <span class="focus-number">01</span>
+          <h3>Responsive Frontend</h3>
+          <p>Landing pages, project sections, and interfaces that hold their shape on smaller screens too.</p>
+        </article>
+        <article class="focus-card reveal">
+          <span class="focus-number">02</span>
+          <h3>Automation Ideas</h3>
+          <p>Workflows that connect discovery, generation, and delivery so repetitive steps feel more streamlined.</p>
+        </article>
+        <article class="focus-card reveal">
+          <span class="focus-number">03</span>
+          <h3>Learning in Public</h3>
+          <p>Each project becomes a visible record of what I am learning, refining, and building next.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section process-section">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Workflow</span>
+          <h2>How I like to work</h2>
+          <p>
+            I prefer a simple loop: explore the idea, build a usable version, then refine the experience until it feels
+            sharp.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card reveal">
+            <span class="process-step">01</span>
+            <h3>Explore</h3>
+            <p>I start by understanding the problem and keeping the structure clean from the beginning.</p>
+          </article>
+          <article class="process-card reveal">
+            <span class="process-step">02</span>
+            <h3>Build</h3>
+            <p>I turn the idea into a working interface or tool as early as possible.</p>
+          </article>
+          <article class="process-card reveal">
+            <span class="process-step">03</span>
+            <h3>Refine</h3>
+            <p>I revisit details like spacing, motion, responsiveness, and clarity so the project feels finished.</p>
+          </article>
+        </div>
       </div>
     </section>
 
     <section id="projects" class="section projects-section">
       <div class="shell">
         <div class="section-heading reveal">
-          <span class="eyebrow">Projects</span>
-          <h2>Projects</h2>
+          <span class="eyebrow">Verified GitHub Projects</span>
+          <h2>Only the repos I checked are featured here.</h2>
           <p>
-            These cards are loaded from a separate project file. When I add a new project there, it appears here too.
+            These cards link directly to GitHub repositories. I only added projects that I could verify locally, so
+            unfinished or unchecked repos are not included here yet.
           </p>
         </div>
 
-        <div id="projects-grid" class="projects-grid reveal" aria-live="polite">
+        <div id="projects-grid" class="projects-grid" aria-live="polite">
           <article class="project-card placeholder-card">
             <span class="project-tag">Loading</span>
             <h3>Loading projects</h3>
-            <p>Project cards will appear here.</p>
+            <p>Verified GitHub project cards will appear here.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="section">
-      <div class="shell">
-        <div class="section-heading reveal">
+    <section id="contact" class="section contact-section">
+      <div class="shell contact-shell">
+        <article class="panel contact-copy reveal">
           <span class="eyebrow">Contact</span>
-          <h2>Contact</h2>
-          <p>Use any of the links below to reach me.</p>
-        </div>
+          <h2>Let&apos;s build something thoughtful.</h2>
+          <p>
+            If you want to talk about an internship, collaboration, or a project idea, these are the best ways to
+            reach me.
+          </p>
+
+          <div class="contact-note">
+            <strong>Best for:</strong>
+            <span>Email for direct contact, GitHub for code, LinkedIn for professional connection.</span>
+          </div>
+        </article>
 
         <div class="contact-grid reveal">
           <a class="contact-card" href="mailto:nishant0880kumar@gmail.com">
-            <strong>Email</strong>
-            <span>nishant0880kumar@gmail.com</span>
+            <span class="contact-label">Email</span>
+            <strong>nishant0880kumar@gmail.com</strong>
+            <p>Best for project discussions, opportunities, and direct communication.</p>
           </a>
           <a class="contact-card" href="https://github.com/Neeshant01" target="_blank" rel="noreferrer">
-            <strong>GitHub</strong>
-            <span>github.com/Neeshant01</span>
+            <span class="contact-label">GitHub</span>
+            <strong>github.com/Neeshant01</strong>
+            <p>See repositories, experiments, and the verified projects featured on this page.</p>
           </a>
           <a class="contact-card" href="https://www.linkedin.com/in/nishant-kumar-423870291/" target="_blank" rel="noreferrer">
-            <strong>LinkedIn</strong>
-            <span>Connect on LinkedIn</span>
+            <span class="contact-label">LinkedIn</span>
+            <strong>Professional profile</strong>
+            <p>Connect for networking, updates, and professional conversations.</p>
           </a>
-          <a class="contact-card" href="pages/donate.html?v=20260328c">
-            <strong>Donate</strong>
-            <span>Support this website</span>
+          <a class="contact-card contact-card-accent" href="pages/donate.html?v=20260405b">
+            <span class="contact-label">Support</span>
+            <strong>Support this work</strong>
+            <p>Open the cleaner donation flow if you want to support future portfolio and project updates.</p>
           </a>
         </div>
       </div>
@@ -176,7 +301,7 @@
   <footer class="site-footer">
     <div class="shell footer-shell">
       <p>Nishant Kumar</p>
-      <p>Personal site</p>
+      <p><span id="footer-year">2026</span> / Built with HTML, CSS, and JavaScript</p>
     </div>
   </footer>
 

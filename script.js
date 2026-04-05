@@ -1,14 +1,55 @@
 const typedText = document.getElementById("typed-text");
+const footerYear = document.getElementById("footer-year");
+const navLinks = document.querySelectorAll("[data-nav]");
+const sections = document.querySelectorAll("main section[id]");
 const phrases = [
-  "Personal site online",
-  "Projects update here",
-  "Built step by step",
-  "Simple and clear"
+  "Open to internships and collaborations",
+  "Building with HTML, React, and Python",
+  "Designing clean, responsive pages",
+  "Checking projects before featuring them"
 ];
 
 let phraseIndex = 0;
 let charIndex = 0;
 let deleting = false;
+
+const revealObserver =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.14 }
+      )
+    : null;
+
+function registerReveal(elements) {
+  elements.forEach((element) => {
+    if (revealObserver) {
+      revealObserver.observe(element);
+    } else {
+      element.classList.add("is-visible");
+    }
+  });
+}
+
+function createTextElement(tagName, className, text) {
+  const element = document.createElement(tagName);
+
+  if (className) {
+    element.className = className;
+  }
+
+  element.textContent = text;
+  return element;
+}
 
 function runTypingEffect() {
   if (!typedText) {
@@ -18,74 +59,32 @@ function runTypingEffect() {
   const currentPhrase = phrases[phraseIndex];
 
   if (deleting) {
-    typedText.textContent = currentPhrase.slice(0, charIndex - 1);
+    typedText.textContent = currentPhrase.slice(0, Math.max(charIndex - 1, 0));
     charIndex -= 1;
 
-    if (charIndex === 0) {
+    if (charIndex <= 0) {
       deleting = false;
+      charIndex = 0;
       phraseIndex = (phraseIndex + 1) % phrases.length;
     }
   } else {
     typedText.textContent = currentPhrase.slice(0, charIndex + 1);
     charIndex += 1;
 
-    if (charIndex === currentPhrase.length) {
+    if (charIndex >= currentPhrase.length) {
       deleting = true;
-      setTimeout(runTypingEffect, 1200);
+      setTimeout(runTypingEffect, 1300);
       return;
     }
   }
 
-  setTimeout(runTypingEffect, deleting ? 42 : 84);
-}
-
-const revealElements = document.querySelectorAll(".reveal");
-
-if ("IntersectionObserver" in window && revealElements.length > 0) {
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
-
-  revealElements.forEach((element) => revealObserver.observe(element));
-} else {
-  revealElements.forEach((element) => element.classList.add("is-visible"));
-}
-
-const navLinks = document.querySelectorAll("[data-nav]");
-const sections = document.querySelectorAll("main section[id]");
-
-if ("IntersectionObserver" in window && navLinks.length > 0 && sections.length > 0) {
-  const navObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-
-        navLinks.forEach((link) => {
-          link.classList.toggle("is-current", link.dataset.nav === entry.target.id);
-        });
-      });
-    },
-    {
-      threshold: 0.45,
-      rootMargin: "-20% 0px -35% 0px"
-    }
-  );
-
-  sections.forEach((section) => navObserver.observe(section));
+  setTimeout(runTypingEffect, deleting ? 44 : 82);
 }
 
 function createProjectCard(project) {
   const article = document.createElement("article");
-  article.className = "project-card";
+  article.className = "project-card reveal";
+  article.style.setProperty("--card-accent", project.accent || "#ffb454");
 
   const safeTitle = project.title || "Untitled Project";
   const safeType = project.type || "Project";
@@ -93,21 +92,52 @@ function createProjectCard(project) {
   const safeStack = project.stack || "More details soon";
   const safeLink = project.link || "#";
   const safeLinkLabel = project.linkLabel || "Open Project";
+  const safeStatus = project.status || "Checked";
+  const safeYear = project.year || "Now";
+  const highlights = Array.isArray(project.highlights) ? project.highlights.slice(0, 3) : [];
 
-  article.innerHTML = `
-    <span class="project-tag">${safeType}</span>
-    <h3>${safeTitle}</h3>
-    <p>${safeSummary}</p>
-    <span class="project-stack">${safeStack}</span>
-    <a class="project-link" href="${safeLink}">${safeLinkLabel}</a>
-  `;
+  const top = document.createElement("div");
+  top.className = "project-top";
 
-  const link = article.querySelector(".project-link");
+  const topMeta = document.createElement("div");
+  topMeta.className = "project-top-meta";
+  topMeta.append(
+    createTextElement("span", "project-tag", safeType),
+    createTextElement("span", "project-status", safeStatus)
+  );
+
+  top.append(topMeta, createTextElement("span", "project-year", safeYear));
+
+  const title = createTextElement("h3", "", safeTitle);
+  const summary = createTextElement("p", "", safeSummary);
+
+  article.append(top, title, summary);
+
+  if (highlights.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "project-points";
+
+    highlights.forEach((point) => {
+      list.appendChild(createTextElement("li", "", point));
+    });
+
+    article.appendChild(list);
+  }
+
+  const footer = document.createElement("div");
+  footer.className = "project-footer";
+
+  const stack = createTextElement("span", "project-stack", safeStack);
+  const link = createTextElement("a", "project-link", safeLinkLabel);
+  link.href = safeLink;
 
   if (/^https?:\/\//.test(safeLink)) {
-    link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noreferrer");
+    link.target = "_blank";
+    link.rel = "noreferrer";
   }
+
+  footer.append(stack, link);
+  article.appendChild(footer);
 
   return article;
 }
@@ -132,28 +162,69 @@ async function loadProjects() {
     projectsGrid.innerHTML = "";
 
     if (projects.length === 0) {
-      projectsGrid.innerHTML = `
-        <article class="project-card placeholder-card">
-          <span class="project-tag">Empty</span>
-          <h3>No projects added yet.</h3>
-          <p>Add a new item in <code>projects/projects.json</code> and it will appear here.</p>
-        </article>
-      `;
+      const emptyCard = document.createElement("article");
+      emptyCard.className = "project-card placeholder-card reveal";
+      emptyCard.append(
+        createTextElement("span", "project-tag", "Empty"),
+        createTextElement("h3", "", "No verified projects added yet."),
+        createTextElement("p", "", "Add checked repositories in projects/projects.json and they will appear here.")
+      );
+      projectsGrid.appendChild(emptyCard);
+      registerReveal([emptyCard]);
       return;
     }
 
-    projects.forEach((project) => {
-      projectsGrid.appendChild(createProjectCard(project));
-    });
+    const cards = projects.map((project) => createProjectCard(project));
+    cards.forEach((card) => projectsGrid.appendChild(card));
+    registerReveal(cards);
   } catch (error) {
-    projectsGrid.innerHTML = `
-        <article class="project-card placeholder-card">
-          <span class="project-tag">Error</span>
-          <h3>Projects could not load.</h3>
-          <p>The project data file is missing or unavailable.</p>
-        </article>
-      `;
+    const fallbackCard = document.createElement("article");
+    fallbackCard.className = "project-card placeholder-card reveal";
+    fallbackCard.append(
+      createTextElement("span", "project-tag", "Error"),
+      createTextElement("h3", "", "Projects could not load."),
+      createTextElement("p", "", "The project data file is missing or unavailable.")
+    );
+    projectsGrid.innerHTML = "";
+    projectsGrid.appendChild(fallbackCard);
+    registerReveal([fallbackCard]);
   }
+}
+
+const revealElements = Array.from(document.querySelectorAll(".reveal"));
+
+if (revealObserver) {
+  registerReveal(revealElements);
+} else {
+  revealElements.forEach((element) => {
+    element.classList.add("is-visible");
+  });
+}
+
+if ("IntersectionObserver" in window && navLinks.length > 0 && sections.length > 0) {
+  const navObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        navLinks.forEach((link) => {
+          link.classList.toggle("is-current", link.dataset.nav === entry.target.id);
+        });
+      });
+    },
+    {
+      threshold: 0.45,
+      rootMargin: "-20% 0px -35% 0px"
+    }
+  );
+
+  sections.forEach((section) => navObserver.observe(section));
+}
+
+if (footerYear) {
+  footerYear.textContent = String(new Date().getFullYear());
 }
 
 window.addEventListener("load", () => {
