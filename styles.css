@@ -247,6 +247,7 @@ a {
   background: linear-gradient(180deg, rgba(8, 14, 28, 0.3) 0%, rgba(12, 20, 40, 0.42) 100%);
 }
 
+.photo-feature-section,
 .services-section,
 .resume-section,
 .contact-section {
@@ -477,6 +478,10 @@ a {
   gap: 1rem;
 }
 
+.feature-photo-card {
+  align-self: stretch;
+}
+
 .portrait-image {
   display: block;
   width: 100%;
@@ -487,6 +492,14 @@ a {
   border-radius: calc(var(--radius-xl) - 10px);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(124, 229, 255, 0.15);
+}
+
+.feature-image {
+  max-height: 42rem;
+}
+
+.photo-copy {
+  align-self: center;
 }
 
 .about-panel,
