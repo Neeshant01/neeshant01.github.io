@@ -1,9 +1,9 @@
 const typedText = document.getElementById("typed-text");
 const phrases = [
-  "Student profile online",
-  "Project section ready",
-  "Add work anytime",
-  "Simple and clean"
+  "Personal site online",
+  "Projects update here",
+  "Built step by step",
+  "Simple and clear"
 ];
 
 let phraseIndex = 0;
@@ -89,8 +89,8 @@ function createProjectCard(project) {
 
   const safeTitle = project.title || "Untitled Project";
   const safeType = project.type || "Project";
-  const safeSummary = project.summary || "Project summary will be added here.";
-  const safeStack = project.stack || "Details coming soon";
+  const safeSummary = project.summary || "Project details will be added here.";
+  const safeStack = project.stack || "More details soon";
   const safeLink = project.link || "#";
   const safeLinkLabel = project.linkLabel || "Open Project";
 
@@ -136,7 +136,7 @@ async function loadProjects() {
         <article class="project-card placeholder-card">
           <span class="project-tag">Empty</span>
           <h3>No projects added yet.</h3>
-          <p>Add a new item inside <code>projects/projects.json</code> and it will appear here.</p>
+          <p>Add a new item in <code>projects/projects.json</code> and it will appear here.</p>
         </article>
       `;
       return;
@@ -147,12 +147,12 @@ async function loadProjects() {
     });
   } catch (error) {
     projectsGrid.innerHTML = `
-      <article class="project-card placeholder-card">
-        <span class="project-tag">Error</span>
-        <h3>Projects could not load.</h3>
-        <p>The homepage is ready, but the project data file is missing or unavailable.</p>
-      </article>
-    `;
+        <article class="project-card placeholder-card">
+          <span class="project-tag">Error</span>
+          <h3>Projects could not load.</h3>
+          <p>The project data file is missing or unavailable.</p>
+        </article>
+      `;
   }
 }
 
