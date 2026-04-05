@@ -1,19 +1,19 @@
 :root {
-  --bg: #0b0d12;
-  --bg-soft: #131821;
-  --panel: rgba(20, 25, 33, 0.84);
-  --panel-strong: rgba(24, 31, 42, 0.94);
-  --line: rgba(139, 223, 215, 0.12);
-  --line-strong: rgba(139, 223, 215, 0.24);
-  --text: #f5f7fb;
-  --muted: #b9c2d0;
-  --accent: #8cdfd6;
-  --accent-strong: #59b8d0;
-  --glow: rgba(89, 184, 208, 0.22);
+  --bg: #030705;
+  --bg-soft: #09110d;
+  --panel: rgba(5, 16, 11, 0.82);
+  --panel-strong: rgba(8, 22, 15, 0.94);
+  --line: rgba(48, 255, 151, 0.15);
+  --line-strong: rgba(48, 255, 151, 0.34);
+  --text: #ecfff3;
+  --muted: #9cc8ad;
+  --accent: #2fff97;
+  --accent-strong: #11d47e;
+  --glow: rgba(47, 255, 151, 0.24);
   --radius-lg: 30px;
   --radius-md: 22px;
   --radius-sm: 16px;
-  --shadow: 0 24px 70px rgba(1, 6, 13, 0.42);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.44);
 }
 
 * {
@@ -28,9 +28,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(115, 210, 198, 0.11), transparent 28%),
-    radial-gradient(circle at top right, rgba(255, 190, 120, 0.08), transparent 22%),
-    linear-gradient(180deg, #0b0d12 0%, #11151d 46%, #090b10 100%);
+    radial-gradient(circle at top left, rgba(47, 255, 151, 0.11), transparent 28%),
+    radial-gradient(circle at top right, rgba(23, 141, 89, 0.08), transparent 22%),
+    linear-gradient(180deg, #030705 0%, #050b08 46%, #020403 100%);
   color: var(--text);
   font-family: "Manrope", sans-serif;
   line-height: 1.6;
@@ -42,12 +42,27 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.46), transparent 82%);
+    linear-gradient(rgba(47, 255, 151, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 255, 151, 0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.64), transparent 85%);
   pointer-events: none;
-  opacity: 0.46;
+  opacity: 0.48;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.01) 48%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  background-size: 100% 5px;
+  opacity: 0.14;
+  pointer-events: none;
 }
 
 a {
@@ -64,11 +79,11 @@ img {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 14% 20%, rgba(124, 228, 213, 0.17), transparent 24%),
-    radial-gradient(circle at 84% 18%, rgba(255, 187, 122, 0.12), transparent 22%),
-    radial-gradient(circle at 50% 68%, rgba(82, 137, 196, 0.14), transparent 28%),
-    radial-gradient(circle at 70% 88%, rgba(120, 227, 201, 0.08), transparent 24%);
-  filter: blur(34px);
+    radial-gradient(circle at 12% 18%, rgba(47, 255, 151, 0.18), transparent 24%),
+    radial-gradient(circle at 82% 16%, rgba(16, 105, 61, 0.14), transparent 23%),
+    radial-gradient(circle at 50% 68%, rgba(35, 210, 124, 0.1), transparent 28%),
+    radial-gradient(circle at 70% 88%, rgba(17, 212, 126, 0.08), transparent 24%);
+  filter: blur(36px);
   pointer-events: none;
   z-index: -1;
 }
@@ -83,8 +98,8 @@ img {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(18px);
-  background: rgba(10, 12, 17, 0.72);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(3, 8, 5, 0.78);
+  border-bottom: 1px solid rgba(47, 255, 151, 0.1);
 }
 
 .nav-shell {
@@ -99,6 +114,9 @@ img {
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.04em;
+  font-family: "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(47, 255, 151, 0.18);
 }
 
 .nav-links {
@@ -113,12 +131,16 @@ img {
   padding: 10px 14px;
   border-radius: 999px;
   color: var(--muted);
+  border: 1px solid transparent;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.9rem;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-links a:hover,
 .nav-links a:focus-visible {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(47, 255, 151, 0.07);
+  border-color: rgba(47, 255, 151, 0.16);
   color: var(--text);
   outline: none;
 }
@@ -147,6 +169,18 @@ img {
   box-shadow: var(--shadow);
 }
 
+.hero-copy::before,
+.portrait-panel::before,
+.info-card::before,
+.contact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(47, 255, 151, 0.07), transparent 28%);
+}
+
 .hero-copy {
   padding: 40px;
 }
@@ -156,11 +190,12 @@ img {
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
-  color: #8dbdff;
+  color: #8df2bc;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  font-family: "IBM Plex Mono", monospace;
 }
 
 .eyebrow::before {
@@ -169,7 +204,7 @@ img {
   height: 8px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 6px rgba(123, 182, 255, 0.13);
+  box-shadow: 0 0 0 6px rgba(47, 255, 151, 0.13);
 }
 
 h1,
@@ -183,6 +218,7 @@ h1 {
   font-size: clamp(2.6rem, 6vw, 5rem);
   line-height: 0.98;
   letter-spacing: -0.04em;
+  text-shadow: 0 0 24px rgba(47, 255, 151, 0.08);
 }
 
 h2 {
@@ -223,6 +259,7 @@ h2 {
   border-radius: 999px;
   border: 1px solid transparent;
   font-weight: 700;
+  font-family: "IBM Plex Mono", monospace;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -234,12 +271,12 @@ h2 {
 
 .button-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #03111f;
+  color: #03110a;
   box-shadow: 0 16px 36px var(--glow);
 }
 
 .button-secondary {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(47, 255, 151, 0.04);
   border-color: var(--line-strong);
 }
 
@@ -252,8 +289,8 @@ h2 {
 .note-card {
   padding: 16px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(47, 255, 151, 0.12);
+  background: rgba(47, 255, 151, 0.03);
 }
 
 .note-card strong,
@@ -281,8 +318,8 @@ h2 {
   position: absolute;
   inset: 22px;
   border-radius: 34px;
-  background: radial-gradient(circle at top, rgba(123, 182, 255, 0.2), transparent 58%);
-  filter: blur(8px);
+  background: radial-gradient(circle at top, rgba(47, 255, 151, 0.22), transparent 58%);
+  filter: blur(10px);
 }
 
 .portrait-frame {
@@ -291,8 +328,8 @@ h2 {
   aspect-ratio: 4 / 5;
   border-radius: 32px;
   padding: 10px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
-  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.28);
+  background: linear-gradient(180deg, rgba(47, 255, 151, 0.24), rgba(47, 255, 151, 0.05));
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.38);
 }
 
 .portrait-frame img {
@@ -338,7 +375,7 @@ h2 {
   justify-content: space-between;
   gap: 18px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(47, 255, 151, 0.08);
 }
 
 .detail-list li:last-child {
@@ -366,7 +403,7 @@ h2 {
 .contact-card:focus-visible {
   transform: translateY(-3px);
   border-color: var(--line-strong);
-  background: rgba(18, 31, 47, 0.96);
+  background: rgba(7, 21, 14, 0.96);
   outline: none;
 }
 
@@ -378,7 +415,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: #92a4be;
+  color: #7ca58c;
   font-size: 0.94rem;
 }
 
