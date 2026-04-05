@@ -3,254 +3,552 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Under Maintenance</title>
-  <meta name="description" content="Website under maintenance. Please check back soon.">
+  <title>Nishant Kumar</title>
+  <meta name="description" content="Simple personal webpage for Nishant Kumar.">
   <style>
     :root {
-      color-scheme: dark;
+      color-scheme: light;
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --border: #e6e8ef;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top left, rgba(0, 217, 255, 0.18), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(0, 255, 170, 0.14), transparent 24%),
-        linear-gradient(180deg, #030507 0%, #060a10 45%, #020304 100%);
-      color: #f5fbff;
       font-family: Arial, sans-serif;
-      text-align: center;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent 25%),
+        linear-gradient(180deg, #fafbff 0%, #f4f7fb 100%);
     }
 
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(80px);
-      pointer-events: none;
-      opacity: 0.7;
-      animation: float 10s ease-in-out infinite;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    body::before {
-      width: 240px;
-      height: 240px;
-      top: 10%;
-      left: -60px;
-      background: rgba(0, 217, 255, 0.18);
+    button,
+    input,
+    textarea {
+      font: inherit;
     }
 
-    body::after {
-      width: 280px;
-      height: 280px;
-      right: -80px;
-      bottom: 5%;
-      background: rgba(0, 255, 170, 0.14);
-      animation-delay: -4s;
+    .container {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
     }
 
-    .panel {
-      position: relative;
-      width: min(100%, 620px);
-      padding: 40px 28px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 28px;
-      background: rgba(7, 12, 18, 0.78);
-      backdrop-filter: blur(16px);
-      box-shadow:
-        0 0 0 1px rgba(0, 217, 255, 0.08),
-        0 24px 80px rgba(0, 0, 0, 0.45);
+    .nav,
+    .section,
+    .hero-card,
+    .project-card,
+    .donate-card,
+    .contact-card,
+    .qr-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
     }
 
-    .status {
-      display: inline-flex;
+    .nav {
+      display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 10px 16px;
-      border: 1px solid rgba(0, 217, 255, 0.16);
-      border-radius: 999px;
-      background: rgba(0, 217, 255, 0.08);
-      color: #90f6ff;
-      font-size: 0.82rem;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      position: sticky;
+      top: 14px;
+      z-index: 10;
+    }
+
+    .brand {
       font-weight: 700;
-      letter-spacing: 0.18em;
+      font-size: 1.05rem;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .hero-card,
+    .section,
+    .project-card,
+    .donate-card,
+    .contact-card,
+    .qr-card {
+      padding: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: #67f7ff;
-      box-shadow: 0 0 16px #67f7ff;
-      animation: pulse 1.4s ease-in-out infinite;
-    }
-
-    .ring {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 24px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.08);
-      border-top-color: #67f7ff;
-      border-right-color: #6effc8;
-      animation: spin 4s linear infinite;
-    }
-
-    .ring::before,
-    .ring::after {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-    }
-
-    .ring::before {
-      border-left-color: rgba(103, 247, 255, 0.7);
-      animation: spinReverse 2.8s linear infinite;
-    }
-
-    .ring::after {
-      inset: 28px;
-      background: radial-gradient(circle, rgba(103, 247, 255, 0.22), transparent 70%);
-      animation: pulse 1.8s ease-in-out infinite;
-    }
-
     h1,
+    h2,
+    h3,
     p {
       margin: 0;
     }
 
     h1 {
-      font-size: clamp(2.3rem, 7vw, 4.4rem);
-      line-height: 1.05;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 1;
+      margin-bottom: 12px;
     }
 
-    .subtitle {
-      margin-bottom: 18px;
-      font-size: clamp(1rem, 3vw, 1.35rem);
-      color: #d3e4ef;
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      margin-bottom: 10px;
     }
 
-    .message {
-      color: #93a4af;
-      font-size: 1rem;
+    .hero-subtitle,
+    .section-text,
+    .project-text,
+    .helper,
+    .contact-note,
+    .qr-card p,
+    .hero-points span {
+      color: var(--muted);
     }
 
-    .loading {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 24px;
-      color: #84f7ff;
+    .hero-subtitle {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .hero-actions,
+    .project-actions,
+    .donate-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-points span {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
       font-size: 0.95rem;
     }
 
-    .loading span {
-      width: 8px;
-      height: 8px;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: #bfdbfe;
+    }
+
+    .hero-side {
+      display: grid;
+      place-items: center;
+      min-height: 100%;
+      text-align: center;
+    }
+
+    .hero-circle {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle, #ffffff 30%, #dbeafe 31%, #eff6ff 65%, #ffffff 66%);
+      border: 1px solid #dbeafe;
+      color: var(--accent);
+      font-size: 2rem;
+      font-weight: 700;
+      box-shadow: inset 0 0 0 16px rgba(37, 99, 235, 0.06);
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .project-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .project-tag {
+      display: inline-flex;
+      margin-top: 14px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: currentColor;
-      animation: bounce 1.2s infinite ease-in-out;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
-    .loading span:nth-child(2) {
-      animation-delay: 0.15s;
+    .donate-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 16px;
+      margin-top: 16px;
     }
 
-    .loading span:nth-child(3) {
-      animation-delay: 0.3s;
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
+    .amount-field,
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text);
     }
 
-    @keyframes spinReverse {
-      from {
-        transform: rotate(360deg);
-      }
-
-      to {
-        transform: rotate(0deg);
-      }
+    .amount-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      min-height: 56px;
     }
 
-    @keyframes pulse {
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 0.7;
-      }
-
-      50% {
-        transform: scale(1.12);
-        opacity: 1;
-      }
+    .amount-field span {
+      font-weight: 700;
     }
 
-    @keyframes bounce {
-      0%,
-      80%,
-      100% {
-        transform: translateY(0);
-        opacity: 0.45;
-      }
-
-      40% {
-        transform: translateY(-8px);
-        opacity: 1;
-      }
+    .amount-field input {
+      border: 0;
+      min-height: auto;
+      padding: 0;
+      outline: none;
     }
 
-    @keyframes float {
-      0%,
-      100% {
-        transform: translateY(0);
+    .qr-card {
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .qr-card img {
+      width: min(100%, 220px);
+      aspect-ratio: 1;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .qr-amount {
+      margin: 14px 0 6px;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    input,
+    textarea {
+      min-height: 52px;
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .footer {
+      padding: 4px 0 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 760px) {
+      .nav,
+      .hero,
+      .donate-grid {
+        grid-template-columns: 1fr;
       }
 
-      50% {
-        transform: translateY(24px);
+      .nav {
+        position: static;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .container {
+        width: min(100% - 20px, 100%);
+        padding-top: 14px;
       }
     }
   </style>
 </head>
 <body>
-  <main class="panel">
-    <div class="status">
-      <span class="dot"></span>
-      <span>Maintenance Mode</span>
-    </div>
-    <div class="ring" aria-hidden="true"></div>
-    <h1>Website Under Maintenance</h1>
-    <p class="subtitle">We are making some updates.</p>
-    <p class="message">Please check back soon.</p>
-    <div class="loading" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </main>
+  <div class="container">
+    <header class="nav">
+      <div class="brand">Nishant Kumar</div>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#donate">Donate</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-card">
+          <p class="eyebrow">Simple Web Page</p>
+          <h1>Nishant Kumar</h1>
+          <p class="hero-subtitle">
+            Welcome to my simple website. Here you can see my projects, support me with a donation,
+            and contact me directly.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a class="btn btn-secondary" href="#contact">Contact Me</a>
+          </div>
+          <div class="hero-points">
+            <span>Clean white theme</span>
+            <span>Simple sections</span>
+            <span>WhatsApp contact</span>
+          </div>
+        </div>
+
+        <aside class="hero-card hero-side">
+          <div>
+            <div class="hero-circle">NK</div>
+            <p class="hero-subtitle" style="margin:16px 0 0;">Simple and clean personal page</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="projects">
+        <p class="eyebrow">Projects</p>
+        <h2>My Projects</h2>
+        <p class="section-text">A simple section where your projects can be shown.</p>
+
+        <div class="project-list">
+          <article class="project-card">
+            <h3>Projects Will Be Added Here</h3>
+            <p class="project-text">
+              This section is ready. When you want, I can add your real project cards here one by one.
+            </p>
+            <span class="project-tag">Ready for new projects</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="donate">
+        <p class="eyebrow">Donate</p>
+        <h2>Support Me</h2>
+        <p class="section-text">Enter an amount and scan the QR code or open your UPI app.</p>
+
+        <div class="donate-grid">
+          <div class="donate-card">
+            <label for="amount">Donation Amount</label>
+            <div class="amount-field">
+              <span>₹</span>
+              <input id="amount" type="number" min="1" step="1" value="100" inputmode="numeric">
+            </div>
+            <div class="donate-actions">
+              <button class="btn btn-primary" type="button" id="refresh-qr">Generate QR</button>
+              <a class="btn btn-secondary" id="upi-link" href="#" rel="noopener noreferrer">Pay via UPI App</a>
+            </div>
+            <p class="helper" style="margin-top:14px;">QR code updates automatically with the amount.</p>
+          </div>
+
+          <div class="qr-card">
+            <img id="qr-image" src="" alt="UPI QR code">
+            <div class="qr-amount" id="amount-text">₹100</div>
+            <p>Scan this QR in any UPI app</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <p class="eyebrow">Contact</p>
+        <h2>Contact Me</h2>
+        <p class="section-text">Fill the form and WhatsApp will open with your message.</p>
+
+        <form class="contact-card contact-grid" id="contact-form">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+          </div>
+
+          <div>
+            <label for="reason">Reason</label>
+            <input id="reason" name="reason" type="text" placeholder="Reason for contact" required>
+          </div>
+
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Write your message" required></textarea>
+          </div>
+
+          <div class="donate-actions" style="margin-top:0;">
+            <button class="btn btn-primary" type="submit">Send on WhatsApp</button>
+          </div>
+
+          <p class="contact-note" id="contact-status">Your message will be prepared in WhatsApp.</p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Made for Nishant Kumar</p>
+    </footer>
+  </div>
+
+  <script>
+    const whatsappNumber = "919279080614";
+    const upiId = "92790806142@POSTBANK";
+    const payeeName = "Nishant Kumar";
+    const currency = "INR";
+
+    const amountInput = document.getElementById("amount");
+    const qrImage = document.getElementById("qr-image");
+    const amountText = document.getElementById("amount-text");
+    const upiLink = document.getElementById("upi-link");
+    const refreshQrButton = document.getElementById("refresh-qr");
+    const contactForm = document.getElementById("contact-form");
+    const contactStatus = document.getElementById("contact-status");
+
+    function formatAmount(amount) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function getAmount() {
+      const value = Number(amountInput.value);
+      return Number.isFinite(value) && value > 0 ? value : 100;
+    }
+
+    function buildUpiUrl(amount) {
+      const params = new URLSearchParams({
+        pa: upiId,
+        pn: payeeName,
+        am: String(amount),
+        cu: currency
+      });
+
+      return `upi://pay?${params.toString()}`;
+    }
+
+    function updateDonateUi() {
+      const amount = getAmount();
+      const upiUrl = buildUpiUrl(amount);
+      const qrUrl = new URL("https://api.qrserver.com/v1/create-qr-code/");
+
+      qrUrl.search = new URLSearchParams({
+        size: "220x220",
+        data: upiUrl
+      }).toString();
+
+      amountText.textContent = formatAmount(amount);
+      upiLink.href = upiUrl;
+      qrImage.src = qrUrl.toString();
+      qrImage.alt = `UPI QR code for ${formatAmount(amount)}`;
+    }
+
+    function handleContactSubmit(event) {
+      event.preventDefault();
+
+      const formData = new FormData(contactForm);
+      const text = [
+        "Hello Nishant,",
+        "",
+        `Name: ${formData.get("name")}`,
+        `Reason: ${formData.get("reason")}`,
+        "",
+        "Message:",
+        formData.get("message")
+      ].join("\n");
+
+      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+      const popup = window.open(url, "_blank", "noopener");
+
+      if (popup) {
+        contactStatus.textContent = "WhatsApp opened. Please review and send the message there.";
+      } else {
+        contactStatus.textContent = "WhatsApp could not open automatically. Please allow popups and try again.";
+      }
+    }
+
+    updateDonateUi();
+    amountInput.addEventListener("input", updateDonateUi);
+    refreshQrButton.addEventListener("click", updateDonateUi);
+    contactForm.addEventListener("submit", handleContactSubmit);
+  </script>
 </body>
 </html>
