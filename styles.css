@@ -132,13 +132,22 @@ a {
   gap: 0.85rem;
 }
 
-.brand-avatar {
+.brand-mark {
   width: 2.9rem;
   height: 2.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
   border: 1px solid rgba(118, 236, 255, 0.32);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(118, 236, 255, 0.24), transparent 58%),
+    linear-gradient(135deg, rgba(118, 236, 255, 0.18), rgba(142, 124, 255, 0.28));
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   box-shadow:
     0 0 18px rgba(118, 236, 255, 0.24),
     0 0 28px rgba(142, 124, 255, 0.28);
@@ -415,6 +424,7 @@ a {
 .portrait-card,
 .info-card,
 .project-card,
+.hero-signal-card,
 .contact-panel,
 .contact-row,
 .donation-bot-card,
@@ -430,6 +440,7 @@ a {
 .portrait-card,
 .info-card,
 .project-card,
+.hero-signal-card,
 .contact-panel,
 .donation-bot-card,
 .donation-panel,
@@ -438,6 +449,7 @@ a {
 }
 
 .portrait-card,
+.hero-signal-card,
 .donation-bot-card,
 .donation-panel,
 .contact-row {
@@ -448,6 +460,60 @@ a {
 .hero-visual {
   display: grid;
   gap: 1rem;
+}
+
+.hero-signal-card {
+  position: relative;
+  margin: 0;
+  display: grid;
+  gap: 1.25rem;
+  overflow: hidden;
+}
+
+.hero-signal-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -18% auto;
+  width: 14rem;
+  height: 14rem;
+  background: radial-gradient(circle, rgba(118, 236, 255, 0.18), transparent 72%);
+  pointer-events: none;
+}
+
+.hero-signal-card h3 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  line-height: 1.15;
+}
+
+.signal-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.signal-chip {
+  position: relative;
+  z-index: 1;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(124, 229, 255, 0.14);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(19, 30, 56, 0.82) 0%, rgba(10, 16, 31, 0.9) 100%);
+}
+
+.signal-label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--cyan);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.signal-chip strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .portrait-card {

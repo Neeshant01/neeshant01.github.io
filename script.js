@@ -138,10 +138,10 @@ function setupMenu() {
 
 function setupMouseAnimations() {
   const glowTargets = document.querySelectorAll(
-    ".button, .menu-toggle, .portrait-card, .info-card, .project-card, .contact-row, .amount-card, .donation-bot-card, .donation-message-box, .thanks-card, .nav a"
+    ".button, .menu-toggle, .portrait-card, .hero-signal-card, .info-card, .project-card, .contact-row, .amount-card, .donation-bot-card, .donation-message-box, .thanks-card, .nav a"
   );
   const tiltTargets = document.querySelectorAll(
-    ".portrait-card, .donation-bot-card, .donation-message-box, .amount-card, .project-card, .contact-row"
+    ".portrait-card, .hero-signal-card, .donation-bot-card, .donation-message-box, .amount-card, .project-card, .contact-row"
   );
 
   glowTargets.forEach((node) => {
