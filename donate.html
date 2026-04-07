@@ -6,7 +6,7 @@
   <title>Donate | Nishant Kumar</title>
   <meta
     name="description"
-    content="Support Nishant Kumar with a direct UPI donation flow."
+    content="Donate to Nishant Kumar with a speaking UPI bot, dynamic QR, and a playful support flow."
   >
   <meta
     name="keywords"
@@ -15,7 +15,7 @@
   <meta property="og:title" content="Donate | Nishant Kumar">
   <meta
     property="og:description"
-    content="Support the build with a clean UPI QR flow."
+    content="Support the build with a speaking bot, dynamic QR, and direct UPI flow."
   >
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://neeshant01.github.io/donate.html">
@@ -40,7 +40,7 @@
         <img class="brand-avatar" src="profile-photo.jpg" alt="Nishant Kumar">
         <span class="brand-copy">
           <strong>Nishant Kumar</strong>
-          <small>Support the build</small>
+          <small>Donate</small>
         </span>
       </a>
 
@@ -70,57 +70,67 @@
     <section class="section donate-page-section" id="donate">
       <div class="shell donate-page-shell">
         <div class="section-copy donate-copy" data-reveal>
-          <p class="eyebrow">Support</p>
-          <h1>Support the next build.</h1>
-          <p class="lede">
-            Pick an amount, scan the QR, or open UPI directly. The flow stays simple and the page stays focused.
-          </p>
+          <p class="eyebrow">Donate</p>
+          <h1>Bot ko charge do. Build ko fuel do.</h1>
+          <p class="lede">Amount choose karo, bot bolega, QR update hoga, aur UPI seedha ready milega.</p>
         </div>
 
         <div class="donate-page-grid">
-          <article class="comic-panel" data-reveal>
+          <article class="comic-panel donate-bot-panel" data-reveal>
             <div class="comic-stage" id="comic-stage">
-              <span class="comic-sticker comic-sticker-top" id="comic-sticker-top">READY</span>
-              <span class="comic-sticker comic-sticker-side" id="comic-sticker-side">UPI</span>
-              <div class="comic-speech" id="comic-speech">Choose an amount and the panel will update.</div>
+              <span class="comic-sticker comic-sticker-top" id="comic-sticker-top">BOT ONLINE</span>
+              <span class="comic-sticker comic-sticker-side" id="comic-sticker-side">VOICE MODE</span>
+              <p class="comic-player-line" id="comic-player-line" hidden>Arcade player detected.</p>
+              <div class="comic-speech" id="comic-speech" aria-live="polite">Amount dabao aur dekhna yeh bot kaise bolna start karta hai.</div>
               <div class="comic-spark comic-spark-one"></div>
               <div class="comic-spark comic-spark-two"></div>
-              <div class="comic-mascot" id="comic-mascot">
+              <div class="comic-floor-glow"></div>
+              <div class="comic-mascot" id="comic-mascot" data-mood="idle">
+                <div class="comic-antenna">
+                  <span class="comic-antenna-dot"></span>
+                </div>
                 <div class="comic-head">
-                  <span class="comic-eye"></span>
-                  <span class="comic-eye"></span>
+                  <span class="comic-eye comic-eye-left"></span>
+                  <span class="comic-eye comic-eye-right"></span>
                   <span class="comic-mouth"></span>
+                  <span class="comic-cheek comic-cheek-left"></span>
+                  <span class="comic-cheek comic-cheek-right"></span>
                 </div>
+                <div class="comic-neck"></div>
                 <div class="comic-body">
-                  <span class="comic-core" id="comic-core">Rs 10</span>
+                  <span class="comic-core" id="comic-core">Rs 101</span>
+                  <span class="comic-core-ring"></span>
                 </div>
+                <div class="comic-arm comic-arm-left"></div>
+                <div class="comic-arm comic-arm-right"></div>
+                <div class="comic-shadow"></div>
               </div>
             </div>
             <div class="comic-copy">
-              <p class="bot-label">Support Panel</p>
-              <h3 id="comic-title">Quick support. Clean flow.</h3>
-              <p id="comic-copy">Small support helps fund more builds, more polish, and more time spent shipping.</p>
-              <p class="donation-nudge" id="donation-nudge">Pick an amount to update the panel.</p>
+              <p class="bot-label">Speaking Bot</p>
+              <h3 id="comic-title">Aaj kuch bada daal do boss.</h3>
+              <p id="comic-copy">Chhota support bhi chalega, bada support aur zyada achha lagega, aur bot dono par bol bol ke thank you karega.</p>
+              <p class="donation-nudge" id="donation-nudge">Preset dabao ya custom amount likho. Bot chup nahi rahega.</p>
             </div>
           </article>
 
           <section class="donation-panel" data-reveal data-donate-page>
             <div class="donation-amounts">
-              <button class="amount-card active" type="button" data-amount="10">
-                <strong>10</strong>
-                <span>Quick tap</span>
+              <button class="amount-card" type="button" data-amount="51">
+                <strong>51</strong>
+                <span>Warm up</span>
               </button>
-              <button class="amount-card" type="button" data-amount="20">
-                <strong>20</strong>
-                <span>Coffee boost</span>
+              <button class="amount-card active" type="button" data-amount="101">
+                <strong>101</strong>
+                <span>Clean support</span>
               </button>
-              <button class="amount-card" type="button" data-amount="50">
-                <strong>50</strong>
-                <span>Extra support</span>
+              <button class="amount-card" type="button" data-amount="251">
+                <strong>251</strong>
+                <span>Bot happy</span>
               </button>
-              <button class="amount-card" type="button" data-amount="100">
-                <strong>100</strong>
-                <span>Big push</span>
+              <button class="amount-card" type="button" data-amount="501">
+                <strong>501</strong>
+                <span>Server saver</span>
               </button>
             </div>
 
@@ -132,18 +142,19 @@
                 min="1"
                 step="1"
                 inputmode="numeric"
-                placeholder="Enter amount"
+                placeholder="501, 1100, 2100..."
               >
             </label>
 
             <div class="donation-message-box">
-              <p class="donation-kicker" id="donation-kicker">Rs 10 selected.</p>
-              <p class="donation-text" id="donation-text">A quick support tap keeps the build moving.</p>
+              <p class="donation-kicker" id="donation-kicker">Rs 101 selected.</p>
+              <p class="donation-text" id="donation-text">Seedha support, seedha smile, seedha bot ka loud thank you.</p>
               <div class="donation-actions">
                 <a class="button primary donate-cta" id="open-upi" href="#">Open UPI</a>
                 <button class="button secondary" id="copy-upi" type="button">Copy UPI ID</button>
+                <button class="button secondary" id="bot-repeat" type="button">Bot Bol</button>
               </div>
-              <span class="donation-selected" id="selected-amount-label">Rs 10</span>
+              <span class="donation-selected" id="selected-amount-label">Rs 101</span>
             </div>
 
             <div class="qr-shell">
@@ -153,7 +164,7 @@
               <div class="qr-copy">
                 <span class="info-label">UPI ID</span>
                 <strong id="upi-id">NEESHANT01@PNB</strong>
-                <p id="qr-caption">QR updates instantly with the selected amount.</p>
+                <p id="qr-caption">Amount change hote hi QR bhi change hoga.</p>
               </div>
             </div>
           </section>
@@ -166,9 +177,31 @@
     <div class="thanks-modal">
       <button class="thanks-close" id="thanks-close" type="button" aria-label="Close">×</button>
       <p class="thanks-badge">THANK YOU</p>
-      <h2 id="thanks-overlay-title">Support flow complete.</h2>
-      <p id="thanks-overlay-text">If the payment went through, thank you for backing the work.</p>
-      <p id="thanks-overlay-nudge">You can close this and head back to the arcade anytime.</p>
+      <div class="thanks-bot-wrap">
+        <div class="comic-mascot comic-mascot-thanks is-smiling" id="thanks-bot" data-mood="smile">
+          <div class="comic-antenna">
+            <span class="comic-antenna-dot"></span>
+          </div>
+          <div class="comic-head">
+            <span class="comic-eye comic-eye-left"></span>
+            <span class="comic-eye comic-eye-right"></span>
+            <span class="comic-mouth"></span>
+            <span class="comic-cheek comic-cheek-left"></span>
+            <span class="comic-cheek comic-cheek-right"></span>
+          </div>
+          <div class="comic-neck"></div>
+          <div class="comic-body">
+            <span class="comic-core" id="thanks-core">DONE</span>
+            <span class="comic-core-ring"></span>
+          </div>
+          <div class="comic-arm comic-arm-left"></div>
+          <div class="comic-arm comic-arm-right"></div>
+          <div class="comic-shadow"></div>
+        </div>
+      </div>
+      <h2 id="thanks-overlay-title">Payment return detected.</h2>
+      <p id="thanks-overlay-text">Aaj ka server bach gaya boss.</p>
+      <p id="thanks-overlay-nudge">Agar aur pyaar bacha ho to pet ka bhi intejam kar dena.</p>
       <div class="thanks-overlay-actions">
         <a class="button primary" href="games.html">Open Games</a>
         <button class="button secondary" id="thanks-dismiss" type="button">Close</button>
@@ -185,7 +218,7 @@
       <a class="button secondary" href="index.html#contact">Contact</a>
     </div>
     <div class="shell footer-bottom">
-      <p id="footer-bottom-line">Support helps fund new builds, more polish, and more playable ideas.</p>
+      <p id="footer-bottom-line">Support keeps the next build, next game, and next late-night session alive.</p>
     </div>
   </footer>
 

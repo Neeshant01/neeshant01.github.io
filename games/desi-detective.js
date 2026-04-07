@@ -66,6 +66,7 @@
       text: "A failed archive keycard swipe hit the radio room, but one second later the maintenance door opened correctly with a courier access tag.",
       choices: [
         { label: "Confront Tapan about maintenance access", next: "tapanConfront", trust: { tapan: -1 } },
+        { label: "Take the log and meet Tapan on the rooftop path", next: "tapan", trust: { tapan: -1 } },
         { label: "Tell Meera what the log shows", next: "meeraPressure", trust: { meera: 1 } }
       ]
     },
