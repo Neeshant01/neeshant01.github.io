@@ -2,32 +2,19 @@ const revealNodes = document.querySelectorAll("[data-reveal]");
 const headerShell = document.querySelector(".header-shell");
 const menuToggle = document.querySelector(".menu-toggle");
 const navLinks = document.querySelectorAll(".nav a");
-const amountCards = document.querySelectorAll(".amount-card");
-const customAmountInput = document.getElementById("custom-amount");
-const donationKicker = document.getElementById("donation-kicker");
-const donationText = document.getElementById("donation-text");
-const selectedAmountLabel = document.getElementById("selected-amount-label");
-const copyUpiButton = document.getElementById("copy-upi");
-const upiId = document.getElementById("upi-id");
-const thanksCard = document.getElementById("thanks-card");
-const thanksText = document.getElementById("thanks-text");
-const surpriseTitle = document.getElementById("surprise-title");
-const surpriseText = document.getElementById("surprise-text");
-
-let selectedAmount = "10";
 
 const surpriseMessages = [
   {
-    title: "Midnight Supporter",
-    text: "Aapne bot ka dil jeet liya. Ab ye officially aapko apna raat ka hero maanta hai.",
+    title: "Comic Supporter",
+    text: "Aaj ke liye aapne support lane unlock kar li. Vibe officially better ho gayi.",
   },
   {
-    title: "Legendary UPI Warrior",
-    text: "Agar bhej diya, to aapne simple donate nahi kiya. Aapne pure vibe ko upgrade kar diya.",
+    title: "QR Hero",
+    text: "Agar payment bheja, to aaj ka silent MVP title aapka hua.",
   },
   {
-    title: "Code Fuel Dealer",
-    text: "Aapke naam ka invisible sticker ab robot ke processor pe lag gaya hai.",
+    title: "Build Booster",
+    text: "Chhota ya bada, support ne page ko aur project ko dono ko energy de di.",
   },
 ];
 
@@ -124,7 +111,7 @@ function setupMenu() {
   });
 
   document.addEventListener("click", (event) => {
-    if (!headerShell.contains(event.target)) {
+    if (headerShell instanceof HTMLElement && !headerShell.contains(event.target)) {
       closeMenu();
     }
   });
@@ -138,10 +125,10 @@ function setupMenu() {
 
 function setupMouseAnimations() {
   const glowTargets = document.querySelectorAll(
-    ".button, .menu-toggle, .portrait-card, .hero-signal-card, .info-card, .project-card, .contact-row, .amount-card, .donation-bot-card, .donation-message-box, .thanks-card, .nav a"
+    ".button, .menu-toggle, .portrait-card, .hero-signal-card, .info-card, .project-card, .contact-button-card, .comic-panel, .amount-card, .donation-message-box, .qr-shell, .thanks-card, .nav a, .support-pill"
   );
   const tiltTargets = document.querySelectorAll(
-    ".portrait-card, .hero-signal-card, .donation-bot-card, .donation-message-box, .amount-card, .project-card, .contact-row"
+    ".portrait-card, .hero-signal-card, .project-card, .contact-button-card, .comic-panel, .amount-card, .qr-shell"
   );
 
   glowTargets.forEach((node) => {
@@ -170,8 +157,6 @@ function setupMouseAnimations() {
       return;
     }
 
-    node.classList.add("mouse-tilt");
-
     node.addEventListener("pointermove", (event) => {
       const rect = node.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -185,64 +170,6 @@ function setupMouseAnimations() {
       node.style.transform = "";
     });
   });
-}
-
-function updateDonationContent(amount, title, pitch) {
-  selectedAmount = amount;
-
-  if (donationKicker) {
-    donationKicker.textContent = title;
-  }
-
-  if (donationText) {
-    donationText.textContent = pitch;
-  }
-
-  if (selectedAmountLabel) {
-    selectedAmountLabel.textContent = `Selected: ${amount}`;
-  }
-
-  if (copyUpiButton) {
-    copyUpiButton.textContent = "Copy UPI & Donate";
-  }
-}
-
-function setupDonationSelection() {
-  amountCards.forEach((card) => {
-    if (!(card instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    card.addEventListener("click", () => {
-      amountCards.forEach((other) => other.classList.remove("active"));
-      card.classList.add("active");
-
-      const amount = card.dataset.amount ?? "10";
-      const title = card.dataset.title ?? "Thoda support kar do";
-      const pitch = card.dataset.pitch ?? "UPI copy karo aur dil se support bhejo.";
-      updateDonationContent(amount, title, pitch);
-
-      if (customAmountInput instanceof HTMLInputElement) {
-        customAmountInput.value = "";
-      }
-    });
-  });
-
-  if (customAmountInput instanceof HTMLInputElement) {
-    customAmountInput.addEventListener("input", () => {
-      const trimmed = customAmountInput.value.trim();
-      if (!trimmed) {
-        return;
-      }
-
-      amountCards.forEach((card) => card.classList.remove("active"));
-      updateDonationContent(
-        trimmed,
-        `Custom amount ${trimmed} ka pyaar`,
-        `Wah boss. ${trimmed} type kar diya matlab aap dil se aaye ho. UPI copy karo aur scene bana do.`
-      );
-    });
-  }
 }
 
 async function copyText(text) {
@@ -262,40 +189,199 @@ async function copyText(text) {
   document.body.removeChild(textarea);
 }
 
-function setupDonationAction() {
-  if (!(copyUpiButton instanceof HTMLButtonElement) || !(upiId instanceof HTMLElement)) {
+function setupDonationExperience() {
+  const donateRoot = document.querySelector("[data-donate-page]");
+  if (!(donateRoot instanceof HTMLElement)) {
     return;
   }
 
-  copyUpiButton.addEventListener("click", async () => {
-    try {
-      await copyText(upiId.textContent ?? "NEESHANT01@PNB");
-      copyUpiButton.textContent = "UPI Copied";
+  const amountCards = donateRoot.querySelectorAll(".amount-card");
+  const customAmountInput = donateRoot.querySelector("#custom-amount");
+  const donationKicker = donateRoot.querySelector("#donation-kicker");
+  const donationText = donateRoot.querySelector("#donation-text");
+  const selectedAmountLabel = donateRoot.querySelector("#selected-amount-label");
+  const openUpiButton = donateRoot.querySelector("#open-upi");
+  const copyUpiButton = donateRoot.querySelector("#copy-upi");
+  const upiId = donateRoot.querySelector("#upi-id");
+  const qrCaption = donateRoot.querySelector("#qr-caption");
+  const qrCodeNode = donateRoot.querySelector("#qr-code");
+  const thanksCard = donateRoot.querySelector("#thanks-card");
+  const thanksText = donateRoot.querySelector("#thanks-text");
+  const surpriseTitle = donateRoot.querySelector("#surprise-title");
+  const surpriseText = donateRoot.querySelector("#surprise-text");
 
-      if (thanksCard instanceof HTMLElement) {
-        thanksCard.hidden = false;
-      }
+  const upiPayeeId = "NEESHANT01@PNB";
+  const upiPayeeName = "Nishant Kumar";
+  const transactionNote = "Support Nishant";
+  let selectedAmount = "10";
+  let qrInstance = null;
 
-      if (thanksText instanceof HTMLElement) {
-        thanksText.textContent = `UPI copy ho gaya. Agar aapne ${selectedAmount} bhej diya ho, dil se thank you boss.`;
-      }
+  function buildUpiUri(amount) {
+    const params = new URLSearchParams({
+      pa: upiPayeeId,
+      pn: upiPayeeName,
+      tn: transactionNote,
+      cu: "INR",
+      am: amount,
+    });
 
-      const surprise = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
-      if (surpriseTitle instanceof HTMLElement) {
-        surpriseTitle.textContent = surprise.title;
-      }
-      if (surpriseText instanceof HTMLElement) {
-        surpriseText.textContent = surprise.text;
-      }
-    } catch {
-      copyUpiButton.textContent = "Copy Failed";
+    return `upi://pay?${params.toString()}`;
+  }
+
+  function renderQrCode(uri) {
+    if (!(qrCodeNode instanceof HTMLElement) || typeof QRCode === "undefined") {
+      return;
     }
+
+    if (!qrInstance) {
+      qrInstance = new QRCode(qrCodeNode, {
+        width: 260,
+        height: 260,
+        colorDark: "#061018",
+        colorLight: "#f8fbff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    }
+
+    qrInstance.clear();
+    qrInstance.makeCode(uri);
+  }
+
+  function setThanksState(mode) {
+    if (thanksCard instanceof HTMLElement) {
+      thanksCard.hidden = false;
+    }
+
+    if (thanksText instanceof HTMLElement) {
+      if (mode === "open") {
+        thanksText.textContent = `UPI app launch try ho gaya. Agar aapne Rs ${selectedAmount} bhej diya, dil se thank you.`;
+      } else {
+        thanksText.textContent = `UPI ID copy ho gaya. Agar aapne Rs ${selectedAmount} bheja, dil se thank you.`;
+      }
+    }
+
+    const surprise = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
+    if (surpriseTitle instanceof HTMLElement) {
+      surpriseTitle.textContent = surprise.title;
+    }
+    if (surpriseText instanceof HTMLElement) {
+      surpriseText.textContent = surprise.text;
+    }
+  }
+
+  function updateDonationState(amount, title, pitch) {
+    selectedAmount = amount;
+    const upiUri = buildUpiUri(amount);
+
+    if (donationKicker instanceof HTMLElement) {
+      donationKicker.textContent = title;
+    }
+
+    if (donationText instanceof HTMLElement) {
+      donationText.textContent = pitch;
+    }
+
+    if (selectedAmountLabel instanceof HTMLElement) {
+      selectedAmountLabel.textContent = `Selected: Rs ${amount}`;
+    }
+
+    if (openUpiButton instanceof HTMLAnchorElement) {
+      openUpiButton.href = upiUri;
+    }
+
+    if (copyUpiButton instanceof HTMLButtonElement) {
+      copyUpiButton.textContent = "Copy UPI ID";
+    }
+
+    if (qrCaption instanceof HTMLElement) {
+      qrCaption.textContent = `QR ready for Rs ${amount}. Scan it or tap the UPI button above.`;
+    }
+
+    renderQrCode(upiUri);
+  }
+
+  amountCards.forEach((card, index) => {
+    if (!(card instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    card.addEventListener("click", () => {
+      amountCards.forEach((otherCard) => {
+        if (otherCard instanceof HTMLElement) {
+          otherCard.classList.remove("active");
+        }
+      });
+      card.classList.add("active");
+
+      if (customAmountInput instanceof HTMLInputElement) {
+        customAmountInput.value = "";
+      }
+
+      const amount = card.dataset.amount ?? (index === 0 ? "10" : selectedAmount);
+      const title = card.dataset.title ?? `Rs ${amount} selected`;
+      const pitch = card.dataset.pitch ?? "Support ready hai. Bas action lena hai.";
+      updateDonationState(amount, title, pitch);
+    });
   });
+
+  if (customAmountInput instanceof HTMLInputElement) {
+    customAmountInput.addEventListener("input", () => {
+      const trimmed = customAmountInput.value.trim();
+      const normalized = Number.parseInt(trimmed, 10);
+
+      if (!trimmed) {
+        const firstCard = amountCards[0];
+        if (firstCard instanceof HTMLButtonElement) {
+          firstCard.click();
+        }
+        return;
+      }
+
+      if (!Number.isFinite(normalized) || normalized <= 0) {
+        return;
+      }
+
+      amountCards.forEach((card) => {
+        if (card instanceof HTMLElement) {
+          card.classList.remove("active");
+        }
+      });
+
+      updateDonationState(
+        String(normalized),
+        `Custom amount Rs ${normalized}`,
+        `Custom amount lock ho gaya. Ab QR aur UPI dono isi value ke saath ready hain.`
+      );
+    });
+  }
+
+  if (openUpiButton instanceof HTMLAnchorElement) {
+    openUpiButton.addEventListener("click", () => {
+      setThanksState("open");
+    });
+  }
+
+  if (copyUpiButton instanceof HTMLButtonElement && upiId instanceof HTMLElement) {
+    copyUpiButton.addEventListener("click", async () => {
+      try {
+        await copyText(upiId.textContent ?? upiPayeeId);
+        copyUpiButton.textContent = "UPI ID Copied";
+        setThanksState("copy");
+      } catch {
+        copyUpiButton.textContent = "Copy Failed";
+      }
+    });
+  }
+
+  updateDonationState(
+    "10",
+    "Rs 10 se smile aa jayegi",
+    "Bas 10 bhejo. Itna support bhi comic panel ko happy mode me daal dega."
+  );
 }
 
 setupReveal();
 setupMatrixRain();
 setupMenu();
 setupMouseAnimations();
-setupDonationSelection();
-setupDonationAction();
+setupDonationExperience();

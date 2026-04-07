@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Nishant Kumar | Donate</title>
+  <meta
+    name="description"
+    content="Support Nishant Kumar through a dedicated comic-style donation page with live UPI QR generation and custom amount support."
+  >
+  <meta
+    name="keywords"
+    content="Nishant Kumar donate, UPI QR, support page, portfolio support, comic donate page"
+  >
+  <meta property="og:title" content="Support Nishant Kumar | Donate">
+  <meta
+    property="og:description"
+    content="A dedicated support page with comic-style motion, live QR generation, and UPI donation actions."
+  >
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neeshant01.github.io/donate.html">
+  <meta property="og:image" content="https://neeshant01.github.io/donation-photo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="donate">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="noise"></div>
+  <canvas id="matrix-rain" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <div class="shell header-shell">
+      <a class="brand" href="index.html#home">
+        <span class="brand-mark" aria-hidden="true">NK</span>
+        <span class="brand-copy">
+          <strong>Nishant Kumar</strong>
+          <small>Aspiring Software Engineer</small>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Open navigation menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav" id="site-nav" aria-label="Main Navigation">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="donate.html" aria-current="page">Donate</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section donate-page-section" id="donate">
+      <div class="shell donate-page-shell">
+        <div class="section-copy donate-page-copy" data-reveal>
+          <p class="eyebrow">Support Page</p>
+          <h1 class="page-title">Support the build without clutter, confusion, or fake payment drama.</h1>
+          <p class="lede">
+            Ye page simple hai: amount choose karo, custom amount chaho to likho, QR scan karo ya UPI app kholo,
+            aur agar mann kare to thoda support bhej do.
+          </p>
+          <div class="support-pills">
+            <span class="support-pill">Comic motion</span>
+            <span class="support-pill">Live QR</span>
+            <span class="support-pill">Custom amount</span>
+          </div>
+        </div>
+
+        <div class="donate-page-grid">
+          <article class="comic-panel" data-reveal>
+            <div class="comic-stage">
+              <span class="comic-sticker comic-sticker-top">POW</span>
+              <span class="comic-sticker comic-sticker-side">SCAN</span>
+              <div class="comic-speech">Bhai 10 se start karo, vibe khud upgrade ho jayegi.</div>
+              <div class="comic-spark comic-spark-one"></div>
+              <div class="comic-spark comic-spark-two"></div>
+              <div class="comic-mascot">
+                <div class="comic-head">
+                  <span class="comic-eye"></span>
+                  <span class="comic-eye"></span>
+                  <span class="comic-mouth"></span>
+                </div>
+                <div class="comic-body">
+                  <span class="comic-core">DONATE</span>
+                </div>
+              </div>
+            </div>
+            <div class="comic-copy">
+              <p class="bot-label">Comic Support Unit</p>
+              <h3>No weird robot. Bas ek bold comic vibe jo page ko alive rakhe.</h3>
+              <p>
+                Chhota amount bhi chalega. Target bas itna hai ki support flow clean ho, fun ho, aur kaam ka ho.
+              </p>
+            </div>
+          </article>
+
+          <section class="donation-panel" data-reveal data-donate-page>
+            <div class="donation-amounts">
+              <button class="amount-card active" type="button" data-amount="10" data-title="Rs 10 se smile aa jayegi" data-pitch="Bas 10 bhejo. Itna support bhi comic panel ko happy mode me daal dega.">
+                <strong>10</strong>
+                <span>chai mode</span>
+              </button>
+              <button class="amount-card" type="button" data-amount="20" data-title="Rs 20 se energy double" data-pitch="20 ka support matlab respect bhi aur thoda aur coding fuel bhi.">
+                <strong>20</strong>
+                <span>boost mode</span>
+              </button>
+              <button class="amount-card" type="button" data-amount="50" data-title="Rs 50 se scene strong" data-pitch="50 bheja to aaj ka support proper solid category me chala jayega.">
+                <strong>50</strong>
+                <span>power mode</span>
+              </button>
+              <button class="amount-card" type="button" data-amount="100" data-title="Rs 100 wale log hero hote hain" data-pitch="100 ka support seedha comic legend lane me jata hai.">
+                <strong>100</strong>
+                <span>hero mode</span>
+              </button>
+            </div>
+
+            <label class="custom-amount">
+              <span>Custom amount</span>
+              <input
+                id="custom-amount"
+                type="number"
+                min="1"
+                step="1"
+                inputmode="numeric"
+                placeholder="Apni marzi ka amount likho"
+              >
+            </label>
+
+            <div class="donation-message-box">
+              <p class="donation-kicker" id="donation-kicker">Rs 10 se smile aa jayegi</p>
+              <p class="donation-text" id="donation-text">Bas 10 bhejo. Itna support bhi comic panel ko happy mode me daal dega.</p>
+              <div class="donation-actions">
+                <a class="button primary donate-cta" id="open-upi" href="#">Open UPI App</a>
+                <button class="button secondary" id="copy-upi" type="button">Copy UPI ID</button>
+              </div>
+              <span class="donation-selected" id="selected-amount-label">Selected: Rs 10</span>
+            </div>
+
+            <div class="qr-shell" data-reveal>
+              <div class="qr-code-wrap">
+                <div id="qr-code" class="qr-code" aria-label="UPI QR code"></div>
+              </div>
+              <div class="qr-copy">
+                <span class="info-label">UPI ID</span>
+                <strong id="upi-id">NEESHANT01@PNB</strong>
+                <p id="qr-caption">QR ready for Rs 10. Scan it or tap the UPI button above.</p>
+              </div>
+            </div>
+
+            <div class="thanks-card" id="thanks-card" hidden>
+              <p class="thanks-title">Action complete.</p>
+              <p class="thanks-text" id="thanks-text">UPI action trigger ho gaya. Agar payment bhej diya, dil se thank you.</p>
+              <div class="surprise-box" id="surprise-box">
+                <span>Surprise unlocked</span>
+                <strong id="surprise-title">Comic Supporter</strong>
+                <p id="surprise-text">Aaj ke liye aapka hidden title unlock ho gaya.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div>
+        <p class="footer-title">Navigation</p>
+        <a href="index.html#home">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="donate.html">Donate</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <div>
+        <p class="footer-title">Actions</p>
+        <div class="footer-button-group">
+          <a class="button secondary" href="index.html#contact">Contact Buttons</a>
+          <a class="button secondary" href="https://github.com/Neeshant01" target="_blank" rel="noreferrer">GitHub</a>
+          <a class="button secondary" href="index.html#projects">Projects</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-title">Projects</p>
+        <a href="https://github.com/Neeshant01/auto-yt" target="_blank" rel="noreferrer">Auto-YT</a>
+        <a href="https://github.com/Neeshant01/desi-jarvis" target="_blank" rel="noreferrer">Desi-Jarvis</a>
+        <a href="https://github.com/Neeshant01/Desi-spy" target="_blank" rel="noreferrer">Desi-Spy</a>
+      </div>
+      <div>
+        <p class="footer-title">Support Notes</p>
+        <p>Live QR updates with every amount change.</p>
+        <p>No fake payment confirmation.</p>
+        <p>Comic motion instead of the old 3D robot.</p>
+      </div>
+    </div>
+    <div class="shell footer-bottom">
+      <p>&copy; 2026 Nishant Kumar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
