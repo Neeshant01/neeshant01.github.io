@@ -1,5 +1,13 @@
 (() => {
-  const root = document.getElementById("game-root");
+  const canvas = document.getElementById("game-canvas");
+  if (!(canvas instanceof HTMLCanvasElement)) {
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+
   const progressStore = new Arcade.ProgressStore("signal-heist");
   const levels = [
     {
@@ -11,7 +19,7 @@
       target: [1, 5],
       hackNodes: [[5, 3]],
       walls: [[3, 1], [3, 2], [3, 4], [3, 5]],
-      guards: [{ path: [[4, 2], [4, 4], [2, 4], [2, 2]], index: 0, stun: 0 }],
+      guards: [{ path: [[4, 2], [4, 4], [2, 4], [2, 2]], index: 0 }],
       cameras: [{ position: [0, 3], direction: "down" }]
     },
     {
@@ -24,8 +32,8 @@
       hackNodes: [[6, 4], [1, 2]],
       walls: [[2, 2], [3, 2], [4, 2], [4, 3], [4, 4], [2, 6], [3, 6]],
       guards: [
-        { path: [[6, 5], [5, 5], [4, 5], [3, 5], [4, 5], [5, 5]], index: 0, stun: 0 },
-        { path: [[1, 4], [1, 5], [1, 6], [1, 5]], index: 0, stun: 0 }
+        { path: [[6, 5], [5, 5], [4, 5], [3, 5], [4, 5], [5, 5]], index: 0 },
+        { path: [[1, 4], [1, 5], [1, 6], [1, 5]], index: 0 }
       ],
       cameras: [{ position: [0, 1], direction: "down" }, { position: [7, 4], direction: "up" }]
     },
@@ -39,20 +47,22 @@
       hackNodes: [[6, 2], [2, 4]],
       walls: [[2, 1], [2, 2], [2, 3], [5, 4], [5, 5], [5, 6], [3, 3], [4, 3]],
       guards: [
-        { path: [[6, 6], [5, 6], [4, 6], [4, 5], [4, 4], [5, 4], [6, 4], [6, 5]], index: 0, stun: 0 },
-        { path: [[1, 1], [1, 2], [1, 3], [1, 4], [1, 3], [1, 2]], index: 0, stun: 0 }
+        { path: [[6, 6], [5, 6], [4, 6], [4, 5], [4, 4], [5, 4], [6, 4], [6, 5]], index: 0 },
+        { path: [[1, 1], [1, 2], [1, 3], [1, 4], [1, 3], [1, 2]], index: 0 }
       ],
       cameras: [{ position: [0, 5], direction: "down" }, { position: [7, 3], direction: "up" }]
     }
   ];
+
+  const progress = progressStore.load({ unlocked: 1, level: 0 });
 
   const shell = new Arcade.GameShell({
     gameId: "signal-heist",
     hud: [
       { id: "level", label: "Level", value: "1" },
       { id: "alert", label: "Alert", value: "0%" },
-      { id: "turns", label: "Turns", value: "0" },
-      { id: "status", label: "Target", value: "Not Stolen" }
+      { id: "time", label: "Time", value: "00:00" },
+      { id: "target", label: "Target", value: "Hidden" }
     ],
     board: {
       id: levels[0].id,
@@ -63,15 +73,19 @@
           <span class="board-rank">#${index + 1}</span>
           <span class="board-name">${escapeHtml(entry.name)}</span>
           <span class="board-score">${entry.score}</span>
-          <span class="board-meta">${entry.level} | ${entry.time} turns</span>
+          <span class="board-meta">${escapeHtml(entry.level)} | Alert ${entry.alert}%</span>
         </div>
       `,
-      summarize: (entry) => `${entry.score} pts | ${entry.time} turns by ${entry.name}`
+      summarize: (entry) => `${entry.score} pts | Alert ${entry.alert}% by ${entry.name}`
     },
     noteTitle: "Heist Notes",
-    noteBody: "Hack nodes disable cameras for three turns. Distract stuns the nearest guard once per level.",
+    noteBody: "Move fast, stay out of beams, hack nodes to cut cameras, and use distraction pings to bend patrol routes.",
     onStart: startGame,
-    onRestart: restartGame
+    onRestart: restartGame,
+    onPauseChange: (nextPaused) => {
+      paused = nextPaused;
+      shell.setStatus(nextPaused ? "Heist paused." : "Heist live.");
+    }
   });
 
   levels.forEach((level) => {
@@ -84,17 +98,28 @@
           <span class="board-rank">#${index + 1}</span>
           <span class="board-name">${escapeHtml(entry.name)}</span>
           <span class="board-score">${entry.score}</span>
-          <span class="board-meta">${entry.time} turns | Alert ${entry.alert}%</span>
+          <span class="board-meta">${entry.time}s | Alert ${entry.alert}%</span>
         </div>
       `,
-      summarize: (entry) => `${entry.score} pts | ${entry.time} turns by ${entry.name}`
+      summarize: (entry) => `${entry.score} pts | ${entry.time}s by ${entry.name}`
     });
   });
 
-  let progress = progressStore.load({ unlocked: 1 });
-  let currentLevelIndex = 0;
-  let state = null;
-  let levelCompleted = false;
+  const held = { up: false, down: false, left: false, right: false };
+  let currentLevelIndex = Math.min(progress.level || 0, levels.length - 1);
+  let player;
+  let guards;
+  let alertLevel = 0;
+  let running = false;
+  let paused = false;
+  let ended = false;
+  let startTime = 0;
+  let lastTime = 0;
+  let rafId = 0;
+  let moveTimer = 0;
+  let guardTimer = 0;
+  let cameraDisable = 0;
+  let pingCooldown = 0;
 
   function currentLevel() {
     return levels[currentLevelIndex];
@@ -104,256 +129,410 @@
     return `${row}-${col}`;
   }
 
-  function resetState() {
-    const level = currentLevel();
-    state = {
-      player: [...level.start],
-      turns: 0,
-      alert: 0,
-      hasTarget: false,
-      cameraDisableTurns: 0,
-      distractsLeft: 1,
-      guards: level.guards.map((guard) => ({ ...guard })),
-      finished: false
-    };
-    levelCompleted = false;
-    shell.useBoard(level.id);
-    updateHud();
-    render();
+  function inside(row, col) {
+    return row >= 0 && row < currentLevel().size && col >= 0 && col < currentLevel().size;
   }
 
   function isWall(row, col) {
     return currentLevel().walls.some(([r, c]) => r === row && c === col);
   }
 
-  function isInside(row, col) {
-    return row >= 0 && row < currentLevel().size && col >= 0 && col < currentLevel().size;
+  function isHackNode(row, col) {
+    return currentLevel().hackNodes.some(([r, c]) => r === row && c === col);
+  }
+
+  function isExit(row, col) {
+    return row === currentLevel().exit[0] && col === currentLevel().exit[1];
+  }
+
+  function isTarget(row, col) {
+    return row === currentLevel().target[0] && col === currentLevel().target[1];
+  }
+
+  function resetState() {
+    const level = currentLevel();
+    player = {
+      row: level.start[0],
+      col: level.start[1],
+      hasTarget: false
+    };
+    guards = level.guards.map((guard) => ({
+      path: guard.path.map(([row, col]) => ({ row, col })),
+      index: 0,
+      noiseTarget: null
+    }));
+    alertLevel = 0;
+    running = true;
+    paused = false;
+    ended = false;
+    startTime = Date.now();
+    lastTime = 0;
+    moveTimer = 0;
+    guardTimer = 0.36;
+    cameraDisable = 0;
+    pingCooldown = 0;
+    shell.useBoard(level.id);
+    shell.togglePause(false);
+    shell.updateStat("level", currentLevelIndex + 1);
+    shell.updateStat("alert", "0%");
+    shell.updateStat("time", "00:00");
+    shell.updateStat("target", "Hidden");
+    shell.setStatus("Target cold. Stay off the beams.");
+    draw();
+  }
+
+  function neighbors(node) {
+    return [
+      { row: node.row - 1, col: node.col },
+      { row: node.row + 1, col: node.col },
+      { row: node.row, col: node.col - 1 },
+      { row: node.row, col: node.col + 1 }
+    ].filter((next) => inside(next.row, next.col) && !isWall(next.row, next.col));
+  }
+
+  function bfs(start, goal) {
+    const queue = [[start]];
+    const seen = new Set();
+    while (queue.length) {
+      const path = queue.shift();
+      const node = path[path.length - 1];
+      const nodeKey = key(node.row, node.col);
+      if (seen.has(nodeKey)) continue;
+      seen.add(nodeKey);
+      if (node.row === goal.row && node.col === goal.col) {
+        return path;
+      }
+      neighbors(node).forEach((next) => {
+        if (!seen.has(key(next.row, next.col))) {
+          queue.push([...path, next]);
+        }
+      });
+    }
+    return [];
   }
 
   function cameraVision(camera) {
-    if (state.cameraDisableTurns > 0) return [];
+    if (cameraDisable > 0) {
+      return [];
+    }
     const cells = [];
     const [row, col] = camera.position;
-    const vector = camera.direction === "down" ? [1, 0] : camera.direction === "up" ? [-1, 0] : camera.direction === "left" ? [0, -1] : [0, 1];
-    let nextRow = row + vector[0];
-    let nextCol = col + vector[1];
-    while (isInside(nextRow, nextCol) && !isWall(nextRow, nextCol)) {
+    const direction = camera.direction === "down"
+      ? [1, 0]
+      : camera.direction === "up"
+        ? [-1, 0]
+        : camera.direction === "left"
+          ? [0, -1]
+          : [0, 1];
+    let nextRow = row + direction[0];
+    let nextCol = col + direction[1];
+    while (inside(nextRow, nextCol) && !isWall(nextRow, nextCol)) {
       cells.push(key(nextRow, nextCol));
-      nextRow += vector[0];
-      nextCol += vector[1];
+      nextRow += direction[0];
+      nextCol += direction[1];
     }
     return cells;
   }
 
-  function nearestGuard() {
-    return state.guards
-      .map((guard, index) => {
-        const [row, col] = guard.path[guard.index];
-        const distance = Math.abs(row - state.player[0]) + Math.abs(col - state.player[1]);
-        return { guard, index, distance };
-      })
-      .sort((a, b) => a.distance - b.distance)[0];
-  }
-
-  function render() {
-    const level = currentLevel();
-    const vision = new Set(level.cameras.flatMap((camera) => cameraVision(camera)));
-    const cells = [];
-    for (let row = 0; row < level.size; row += 1) {
-      for (let col = 0; col < level.size; col += 1) {
-        const classes = ["grid-cell"];
-        let label = "";
-        const guardHere = state.guards.find((guard) => {
-          const [guardRow, guardCol] = guard.path[guard.index];
-          return guardRow === row && guardCol === col;
-        });
-        if (row === state.player[0] && col === state.player[1]) classes.push("player"), label = "P";
-        else if (row === level.exit[0] && col === level.exit[1]) classes.push("exit"), label = "E";
-        else if (row === level.target[0] && col === level.target[1] && !state.hasTarget) classes.push("goal"), label = "T";
-        else if (guardHere) classes.push("guard"), label = "G";
-        else if (level.cameras.some((camera) => camera.position[0] === row && camera.position[1] === col)) classes.push("camera"), label = "C";
-        else if (vision.has(key(row, col))) classes.push("visited");
-        else if (level.hackNodes.some(([r, c]) => r === row && c === col)) classes.push("node"), label = "H";
-        else if (isWall(row, col)) classes.push("wall");
-        cells.push(`<div class="${classes.join(" ")}">${label}</div>`);
-      }
+  function handleTileEffects() {
+    if (!player.hasTarget && isTarget(player.row, player.col)) {
+      player.hasTarget = true;
+      shell.audio.cue("success");
+      shell.updateStat("target", "Stolen");
+      shell.setStatus("Target grabbed. Reach the exit.");
     }
-
-    root.innerHTML = `
-      <section class="challenge-panel">
-        <h3>${level.name}</h3>
-        <div class="chip-row">
-          ${levels.map((entry, index) => `<button class="level-chip" type="button" data-level="${index}" ${index + 1 > progress.unlocked ? "disabled" : ""}>${entry.name}</button>`).join("")}
-        </div>
-        <div class="path-board">
-          <div class="grid-board" style="grid-template-columns:repeat(${level.size}, minmax(0, 1fr));">${cells.join("")}</div>
-        </div>
-      </section>
-      <section class="challenge-panel">
-        <h3>Actions</h3>
-        <div class="action-row">
-          <button class="arcade-button secondary" type="button" data-action="wait">Wait</button>
-          <button class="arcade-button secondary" type="button" data-action="hack">Hack</button>
-          <button class="arcade-button secondary" type="button" data-action="distract">Distract</button>
-        </div>
-        <p class="muted-line">Hack works when you stand next to a node. Distract stuns the nearest guard once per level.</p>
-      </section>
-    `;
-
-    root.querySelectorAll("[data-level]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const next = Number(button.getAttribute("data-level"));
-        if (next + 1 > progress.unlocked) return;
-        currentLevelIndex = next;
-        restartGame();
-      });
-    });
-    root.querySelectorAll("[data-action]").forEach((button) => {
-      button.addEventListener("click", () => {
-        performAction(button.getAttribute("data-action"));
-      });
-    });
+    if (player.hasTarget && isExit(player.row, player.col)) {
+      finishHeist(true);
+    }
   }
 
-  function updateHud() {
-    shell.updateStat("level", currentLevelIndex + 1);
-    shell.updateStat("alert", `${state.alert}%`);
-    shell.updateStat("turns", state.turns);
-    shell.updateStat("status", state.hasTarget ? "Stolen" : "Not Stolen");
+  function tryMove(rowDelta, colDelta) {
+    if (!running || paused || ended) {
+      return;
+    }
+    const nextRow = player.row + rowDelta;
+    const nextCol = player.col + colDelta;
+    if (!inside(nextRow, nextCol) || isWall(nextRow, nextCol)) {
+      return;
+    }
+    player.row = nextRow;
+    player.col = nextCol;
+    handleTileEffects();
   }
 
-  function adjacentToHackNode() {
-    return currentLevel().hackNodes.some(([row, col]) => Math.abs(row - state.player[0]) + Math.abs(col - state.player[1]) === 1);
-  }
-
-  function movePlayer(deltaRow, deltaCol) {
-    if (state.finished) return;
-    const nextRow = state.player[0] + deltaRow;
-    const nextCol = state.player[1] + deltaCol;
-    if (!isInside(nextRow, nextCol) || isWall(nextRow, nextCol)) {
+  function hack() {
+    if (!running || paused || ended) {
+      return;
+    }
+    const nearNode = currentLevel().hackNodes.some(
+      ([row, col]) => Math.abs(row - player.row) + Math.abs(col - player.col) <= 1
+    );
+    if (!nearNode) {
       shell.audio.cue("fail");
+      shell.setStatus("Need to stand next to a hack node.");
       return;
     }
-    state.player = [nextRow, nextCol];
-    endTurn();
+    cameraDisable = 4.2;
+    shell.audio.cue("power");
+    shell.setStatus("Cameras cut for a few seconds.");
   }
 
-  function performAction(action) {
-    if (state.finished) return;
-    if (action === "wait") {
-      endTurn();
+  function distract() {
+    if (!running || paused || ended || pingCooldown > 0) {
       return;
     }
-    if (action === "hack") {
-      if (!adjacentToHackNode()) {
-        shell.setStatus("Move next to a hack node first.");
-        shell.audio.cue("fail");
-        return;
+    let nearest = null;
+    guards.forEach((guard) => {
+      const tile = guard.path[guard.index];
+      const distance = Math.abs(tile.row - player.row) + Math.abs(tile.col - player.col);
+      if (!nearest || distance < nearest.distance) {
+        nearest = { guard, distance };
       }
-      state.cameraDisableTurns = 3;
-      shell.audio.cue("power");
-      endTurn();
+    });
+    if (!nearest || nearest.distance > 5) {
+      shell.audio.cue("fail");
+      shell.setStatus("No guard close enough to pull.");
       return;
     }
-    if (action === "distract") {
-      if (state.distractsLeft <= 0) {
-        shell.setStatus("No distractions left.");
-        shell.audio.cue("fail");
-        return;
-      }
-      const nearest = nearestGuard();
-      if (!nearest || nearest.distance > 3) {
-        shell.setStatus("No guard close enough to distract.");
-        shell.audio.cue("fail");
-        return;
-      }
-      nearest.guard.stun = 1;
-      state.distractsLeft -= 1;
-      shell.audio.cue("click");
-      endTurn();
+    const target = {
+      row: Math.max(0, Math.min(currentLevel().size - 1, player.row + (Math.random() > 0.5 ? 1 : -1))),
+      col: Math.max(0, Math.min(currentLevel().size - 1, player.col + (Math.random() > 0.5 ? 1 : -1)))
+    };
+    if (isWall(target.row, target.col)) {
+      target.row = player.row;
+      target.col = player.col;
     }
+    nearest.guard.noiseTarget = target;
+    pingCooldown = 3.2;
+    shell.audio.cue("click");
+    shell.setStatus("Distraction ping sent.");
   }
 
-  function advanceGuards() {
-    state.guards.forEach((guard) => {
-      if (guard.stun > 0) {
-        guard.stun -= 1;
+  function moveGuards() {
+    guards.forEach((guard) => {
+      if (guard.noiseTarget) {
+        const start = guard.path[guard.index];
+        const route = bfs(start, guard.noiseTarget);
+        if (route.length > 1) {
+          guard.path[guard.index] = route[1];
+        }
+        if (route.length <= 1 || (route[1] && route[1].row === guard.noiseTarget.row && route[1].col === guard.noiseTarget.col)) {
+          guard.noiseTarget = null;
+        }
         return;
       }
       guard.index = (guard.index + 1) % guard.path.length;
     });
   }
 
-  function evaluateDetection() {
-    const playerKey = key(state.player[0], state.player[1]);
+  function guardTiles() {
+    return guards.map((guard) => guard.path[guard.index]);
+  }
+
+  function updateAlert(dt) {
+    alertLevel = Math.max(0, alertLevel - dt * 7);
+    const playerKey = key(player.row, player.col);
     const cameraSeen = currentLevel().cameras.some((camera) => cameraVision(camera).includes(playerKey));
-    if (cameraSeen) state.alert = Math.min(100, state.alert + 28);
-    state.guards.forEach((guard) => {
-      const [row, col] = guard.path[guard.index];
-      const distance = Math.abs(row - state.player[0]) + Math.abs(col - state.player[1]);
+    if (cameraSeen) {
+      alertLevel = Math.min(100, alertLevel + dt * 42);
+    }
+    guardTiles().forEach((guardTile) => {
+      const distance = Math.abs(guardTile.row - player.row) + Math.abs(guardTile.col - player.col);
       if (distance === 0) {
-        state.alert = 100;
+        alertLevel = 100;
       } else if (distance === 1) {
-        state.alert = Math.min(100, state.alert + 38);
+        alertLevel = Math.min(100, alertLevel + dt * 60);
       }
     });
-
-    if (!state.hasTarget && state.player[0] === currentLevel().target[0] && state.player[1] === currentLevel().target[1]) {
-      state.hasTarget = true;
-      shell.audio.cue("success");
-    }
-
-    if (state.hasTarget && state.player[0] === currentLevel().exit[0] && state.player[1] === currentLevel().exit[1]) {
-      finishLevel(true);
-      return;
-    }
-
-    if (state.alert >= 100) {
-      finishLevel(false);
+    shell.updateStat("alert", `${Math.round(alertLevel)}%`);
+    if (alertLevel >= 100) {
+      finishHeist(false);
     }
   }
 
-  function finishLevel(success) {
-    state.finished = true;
-    const score = Math.max(150, 1200 - state.turns * 25 - state.alert * 4 + (state.hasTarget ? 220 : 0) + state.distractsLeft * 40 + state.cameraDisableTurns * 10);
+  function finishHeist(success) {
+    if (ended) {
+      return;
+    }
+    ended = true;
+    running = false;
+    const levelId = currentLevel().id;
+    const levelName = currentLevel().name;
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const score = Math.max(
+      150,
+      (success ? 900 : 220) -
+      elapsed * 10 -
+      Math.round(alertLevel) * 5 +
+      (player.hasTarget ? 180 : 0) +
+      Math.round(cameraDisable * 10)
+    );
     if (success && progress.unlocked < levels.length && currentLevelIndex + 1 === progress.unlocked) {
       progress.unlocked += 1;
+      progress.level = Math.min(currentLevelIndex + 1, levels.length - 1);
+      currentLevelIndex = Math.min(currentLevelIndex + 1, levels.length - 1);
+      progressStore.save(progress);
+    } else {
+      progress.level = currentLevelIndex;
       progressStore.save(progress);
     }
     shell.audio.cue(success ? "success" : "fail");
     shell.finishRun({
       title: success ? "Signal secured" : "Heist blown",
-      text: success ? "You stole the signal and got out." : "Security fully locked onto your position.",
-      boardId: currentLevel().id,
+      text: success ? "Target extracted with the route still open." : "Security locked hard before the exit was reached.",
+      boardId: levelId,
       stats: [
-        `Level: ${currentLevel().name}`,
+        `Level: ${levelName}`,
         `Score: ${score}`,
-        `Turns: ${state.turns}`,
-        `Alert: ${state.alert}%`
+        `Time: ${Arcade.formatTime(elapsed)}`,
+        `Alert: ${Math.round(alertLevel)}%`
       ],
-      entry: { score, level: currentLevel().name, time: state.turns, alert: state.alert }
+      entry: {
+        score,
+        level: levelName,
+        time: elapsed,
+        alert: Math.round(alertLevel)
+      }
     });
   }
 
-  function endTurn() {
-    state.turns += 1;
-    if (state.cameraDisableTurns > 0) state.cameraDisableTurns -= 1;
-    advanceGuards();
-    evaluateDetection();
-    updateHud();
-    render();
+  function updateHeldMovement(dt) {
+    moveTimer -= dt;
+    if (moveTimer > 0) {
+      return;
+    }
+    if (held.up) {
+      tryMove(-1, 0);
+      moveTimer = 0.15;
+    } else if (held.down) {
+      tryMove(1, 0);
+      moveTimer = 0.15;
+    } else if (held.left) {
+      tryMove(0, -1);
+      moveTimer = 0.15;
+    } else if (held.right) {
+      tryMove(0, 1);
+      moveTimer = 0.15;
+    }
+  }
+
+  function drawBoard() {
+    if (!player || !guards) {
+      ctx.fillStyle = "#050b16";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+    const level = currentLevel();
+    const cellSize = Math.min(54, Math.floor((canvas.height - 120) / level.size));
+    const boardWidth = level.size * cellSize;
+    const boardHeight = level.size * cellSize;
+    const offsetX = Math.floor((canvas.width - boardWidth) / 2);
+    const offsetY = Math.floor((canvas.height - boardHeight) / 2) + 12;
+
+    ctx.fillStyle = "#050b16";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let row = 0; row < level.size; row += 1) {
+      for (let col = 0; col < level.size; col += 1) {
+        const x = offsetX + col * cellSize;
+        const y = offsetY + row * cellSize;
+        ctx.fillStyle = "rgba(255,255,255,0.03)";
+        if (isWall(row, col)) ctx.fillStyle = "rgba(255,215,107,0.18)";
+        if (isExit(row, col)) ctx.fillStyle = "rgba(142,124,255,0.22)";
+        if (isTarget(row, col) && !player.hasTarget) ctx.fillStyle = "rgba(118,236,255,0.16)";
+        if (isHackNode(row, col)) ctx.fillStyle = "rgba(255,104,140,0.18)";
+        ctx.fillRect(x, y, cellSize - 2, cellSize - 2);
+      }
+    }
+
+    currentLevel().cameras.forEach((camera) => {
+      cameraVision(camera).forEach((tileKey) => {
+        const [row, col] = tileKey.split("-").map(Number);
+        const x = offsetX + col * cellSize;
+        const y = offsetY + row * cellSize;
+        ctx.fillStyle = "rgba(255,104,140,0.12)";
+        ctx.fillRect(x, y, cellSize - 2, cellSize - 2);
+      });
+    });
+
+    const drawToken = (row, col, color, label) => {
+      const x = offsetX + col * cellSize + cellSize / 2;
+      const y = offsetY + row * cellSize + cellSize / 2;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, cellSize * 0.26, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#050912";
+      ctx.font = "bold 12px JetBrains Mono";
+      ctx.fillText(label, x - 4, y + 4);
+    };
+
+    drawToken(player.row, player.col, "#76ecff", "P");
+    guardTiles().forEach((guardTile) => drawToken(guardTile.row, guardTile.col, "#ff688c", "G"));
+
+    ctx.fillStyle = "rgba(7,12,24,0.84)";
+    ctx.fillRect(24, 24, 290, 100);
+    ctx.strokeStyle = "rgba(118,236,255,0.18)";
+    ctx.strokeRect(24, 24, 290, 100);
+    ctx.fillStyle = "#f5f8ff";
+    ctx.font = "12px JetBrains Mono";
+    ctx.fillText(`Level ${currentLevelIndex + 1}: ${level.name}`, 42, 48);
+    ctx.fillText(`Hack E | Distract Q`, 42, 72);
+    ctx.fillText(cameraDisable > 0 ? `Cameras offline ${cameraDisable.toFixed(1)}s` : "Cameras active", 42, 96);
+
+    ctx.fillStyle = "rgba(7,12,24,0.84)";
+    ctx.fillRect(canvas.width - 250, 24, 222, 82);
+    ctx.strokeStyle = "rgba(118,236,255,0.18)";
+    ctx.strokeRect(canvas.width - 250, 24, 222, 82);
+    ctx.fillStyle = "#f5f8ff";
+    ctx.fillText(`Target ${player.hasTarget ? "stolen" : "hidden"}`, canvas.width - 230, 48);
+    ctx.fillText(`Ping ${pingCooldown > 0 ? `${pingCooldown.toFixed(1)}s` : "ready"}`, canvas.width - 230, 72);
+    ctx.fillText(`Exit after target only`, canvas.width - 230, 96);
+  }
+
+  function draw() {
+    drawBoard();
+  }
+
+  function loop(timestamp) {
+    rafId = window.requestAnimationFrame(loop);
+    if (!running || paused || ended) {
+      draw();
+      return;
+    }
+    if (!lastTime) {
+      lastTime = timestamp;
+    }
+    const dt = Math.min(0.032, (timestamp - lastTime) / 1000);
+    lastTime = timestamp;
+
+    updateHeldMovement(dt);
+    guardTimer -= dt;
+    cameraDisable = Math.max(0, cameraDisable - dt);
+    pingCooldown = Math.max(0, pingCooldown - dt);
+
+    if (guardTimer <= 0) {
+      guardTimer = 0.34;
+      moveGuards();
+    }
+
+    updateAlert(dt);
+    shell.updateStat("time", Arcade.formatTime(Math.floor((Date.now() - startTime) / 1000)));
+    draw();
   }
 
   function startGame() {
+    if (!rafId) {
+      rafId = window.requestAnimationFrame(loop);
+    }
     resetState();
     shell.setMobileControls([
-      { label: "Up", onTap: () => movePlayer(-1, 0) },
-      { label: "Left", onTap: () => movePlayer(0, -1) },
-      { label: "Wait", onTap: () => performAction("wait") },
-      { label: "Right", onTap: () => movePlayer(0, 1) },
-      { label: "Hack", onTap: () => performAction("hack") },
-      { label: "Down", onTap: () => movePlayer(1, 0) },
-      { label: "Distract", onTap: () => performAction("distract") }
+      { label: "Up", onTap: () => tryMove(-1, 0) },
+      { label: "Left", onTap: () => tryMove(0, -1) },
+      { label: "Hack", onTap: hack },
+      { label: "Right", onTap: () => tryMove(0, 1) },
+      { label: "Ping", onTap: distract },
+      { label: "Down", onTap: () => tryMove(1, 0) }
     ]);
   }
 
@@ -362,16 +541,23 @@
   }
 
   window.addEventListener("keydown", (event) => {
-    if (!state || state.finished) return;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space", "Period", "KeyW", "KeyA", "KeyS", "KeyD", "KeyH", "KeyE"].includes(event.code)) {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD", "KeyE", "KeyQ"].includes(event.code)) {
       event.preventDefault();
     }
-    if (event.code === "ArrowUp" || event.code === "KeyW") movePlayer(-1, 0);
-    if (event.code === "ArrowDown" || event.code === "KeyS") movePlayer(1, 0);
-    if (event.code === "ArrowLeft" || event.code === "KeyA") movePlayer(0, -1);
-    if (event.code === "ArrowRight" || event.code === "KeyD") movePlayer(0, 1);
-    if (event.code === "Period" || event.code === "Space") performAction("wait");
-    if (event.code === "KeyH") performAction("hack");
-    if (event.code === "KeyE") performAction("distract");
+    if (event.code === "ArrowUp" || event.code === "KeyW") held.up = true;
+    if (event.code === "ArrowDown" || event.code === "KeyS") held.down = true;
+    if (event.code === "ArrowLeft" || event.code === "KeyA") held.left = true;
+    if (event.code === "ArrowRight" || event.code === "KeyD") held.right = true;
+    if (event.code === "KeyE") hack();
+    if (event.code === "KeyQ") distract();
   });
+
+  window.addEventListener("keyup", (event) => {
+    if (event.code === "ArrowUp" || event.code === "KeyW") held.up = false;
+    if (event.code === "ArrowDown" || event.code === "KeyS") held.down = false;
+    if (event.code === "ArrowLeft" || event.code === "KeyA") held.left = false;
+    if (event.code === "ArrowRight" || event.code === "KeyD") held.right = false;
+  });
+
+  draw();
 })();

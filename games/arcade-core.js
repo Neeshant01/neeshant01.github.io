@@ -44,6 +44,26 @@
     return `${STORAGE_PREFIX}.${gameId}.progress`;
   }
 
+  function sanitizePlayerName(value) {
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .slice(0, 12);
+  }
+
+  function readPlayerName() {
+    return sanitizePlayerName(loadJson(PLAYER_KEY, ""));
+  }
+
+  function writePlayerName(name) {
+    const cleanName = sanitizePlayerName(name);
+    if (!cleanName) {
+      return "";
+    }
+    saveJson(PLAYER_KEY, cleanName);
+    return cleanName;
+  }
+
   class AudioManager {
     constructor() {
       this.context = null;
@@ -261,10 +281,23 @@
       this.nameSubmit = document.getElementById("name-submit");
     }
 
+    async ensurePlayerName(options = {}) {
+      const savedName = readPlayerName();
+      if (savedName) {
+        return savedName;
+      }
+      return this.promptForPlayerName({
+        kicker: options.kicker ?? "PLAYER PROFILE",
+        title: options.title ?? "Before the run starts, lock your player name.",
+        text: options.text ?? "This name is reused for leaderboards, saved progress, and support shout-outs."
+      });
+    }
+
     bindCommon() {
-      this.elements.startButton?.addEventListener("click", () => {
+      this.elements.startButton?.addEventListener("click", async () => {
         this.audio.unlock();
         this.audio.cue("click");
+        await this.ensurePlayerName();
         this.hideOverlay(this.elements.startOverlay);
         this.config.onStart?.();
       });
@@ -455,17 +488,28 @@
       });
     }
 
-    promptForName(rank) {
+    promptForPlayerName({
+      kicker = "TOP 10",
+      title = "Add your name.",
+      text = "Saved locally with the leaderboard entry.",
+      defaultName = readPlayerName(),
+      buttonLabel = "Save Name"
+    } = {}) {
       return new Promise((resolve) => {
         if (!(this.nameModal instanceof HTMLElement) || !(this.nameInput instanceof HTMLInputElement)) {
           resolve("PLAYER");
           return;
         }
 
-        const lastName = loadJson(PLAYER_KEY, "PLAYER");
-        this.nameModalTitle.textContent = rank === 1 ? "Champion run. Add your name." : `Rank #${rank} secured. Add your name.`;
-        this.nameModalText.textContent = "Saved locally with the leaderboard entry.";
+        const lastName = sanitizePlayerName(defaultName) || "PLAYER";
+        const kickerNode = document.getElementById("name-modal-kicker");
+        if (kickerNode) {
+          kickerNode.textContent = kicker;
+        }
+        this.nameModalTitle.textContent = title;
+        this.nameModalText.textContent = text;
         this.nameInput.value = lastName;
+        this.nameSubmit.textContent = buttonLabel;
         this.nameSubmit.disabled = !lastName.trim();
         this.nameModal.classList.remove("hidden");
         this.nameInput.focus();
@@ -476,11 +520,10 @@
         };
 
         const submit = () => {
-          const cleanName = this.nameInput.value.trim().slice(0, 12);
+          const cleanName = writePlayerName(this.nameInput.value);
           if (!cleanName) {
             return;
           }
-          saveJson(PLAYER_KEY, cleanName);
           this.nameModal.classList.add("hidden");
           this.nameSubmit.removeEventListener("click", submit);
           this.nameInput.removeEventListener("keydown", onKeyDown);
@@ -497,6 +540,15 @@
         this.nameSubmit.addEventListener("click", submit);
         this.nameInput.addEventListener("keydown", onKeyDown);
         this.nameInput.addEventListener("input", updateState);
+      });
+    }
+
+    promptForName(rank) {
+      return this.promptForPlayerName({
+        kicker: rank === 1 ? "NEW HIGH SCORE" : "TOP 10",
+        title: rank === 1 ? "Champion run. Add your name." : `Rank #${rank} secured. Add your name.`,
+        text: "Saved locally with the leaderboard entry.",
+        buttonLabel: "Save Record"
       });
     }
 
@@ -568,6 +620,9 @@
     escapeHtml,
     loadJson,
     saveJson,
+    readPlayerName,
+    writePlayerName,
+    sanitizePlayerName,
     sorters: {
       scoreDesc: (a, b) => (b.score ?? 0) - (a.score ?? 0) || (a.time ?? Number.MAX_SAFE_INTEGER) - (b.time ?? Number.MAX_SAFE_INTEGER),
       timeAsc: (a, b) => (a.time ?? Number.MAX_SAFE_INTEGER) - (b.time ?? Number.MAX_SAFE_INTEGER) || (a.moves ?? Number.MAX_SAFE_INTEGER) - (b.moves ?? Number.MAX_SAFE_INTEGER),

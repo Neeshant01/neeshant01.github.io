@@ -194,10 +194,12 @@ function setupDonatePage() {
   const thanksOverlay = document.getElementById("thanks-overlay");
   const thanksDismiss = document.getElementById("thanks-dismiss");
   const thanksClose = document.getElementById("thanks-close");
+  const thanksDonateAgain = document.getElementById("thanks-donate-again");
 
   const upiId = "NEESHANT01@PNB";
   const upiName = "Nishant Kumar";
   const botStateKey = "nk.donate.botState";
+  const supportStateKey = "nk.donate.supportState";
   const returnKey = "nk-donate-return";
   const playerName = (() => {
     try {
@@ -207,118 +209,118 @@ function setupDonatePage() {
     }
   })();
 
-  let selectedAmount = 101;
+  let selectedAmount = 251;
   let lastSpokenLine = "";
   let customSpeakTimer = 0;
+  let handledReturnAt = 0;
 
   const openers = [
-    "Wah kya baat hai",
-    "Arre boss screen dekh ke hi current aa gaya",
-    "Aaj to lag raha hai daya mode on hai",
-    "Bot ne door se hi aapka dil pehchan liya",
-    "Yeh click to bade kaam ka lag raha hai",
-    "Kya entry maari hai aapne",
-    "Dil garden garden ho gaya",
-    "Aaj donation section ka mausam badal gaya",
-    "Screen chamak rahi hai matlab mood bana hua hai",
-    "Bas isi pal ka intezar tha"
+    "Boss, yeh click promising lag raha hai",
+    "Aaj support mood strong lag raha hai",
+    "Screen dekh ke hi bot alert ho gaya",
+    "Entry clean hai, ab amount bhi clean aana chahiye",
+    "Yeh start achha lag raha hai",
+    "Bot ne is move ko seriously le liya hai",
+    "Scene ban sakta hai",
+    "Aaj support section me jaan aa gayi",
+    "Yeh arrival halki cheez nahi lag rahi",
+    "Ab kuch achha hone wala lag raha hai"
   ];
 
   const middles = [
-    "{nameLead}agar {amount} aa gaya to bot ki battery seedha dance karegi",
-    "{nameLead}{amount} se server bhi muskura dega aur builder bhi",
-    "{nameLead}{amount} ka push aaya to raat wali coding aur lambi chalegi",
-    "{nameLead}itna sa current bhi build ko next level de deta hai, aur {amount} to seedha boost hai",
-    "{nameLead}{amount} gira to lag jayega ki aaj kismat online hai",
-    "{nameLead}is amount me bot ko awaaz bhi milti hai aur build ko saans bhi",
-    "{nameLead}{amount} se feature bhi niklega aur confidence bhi badega",
-    "{nameLead}yeh amount aaya to keyboard bhi khush aur server bhi khush",
-    "{nameLead}{amount} ka mood bana to bot aaj chup nahi baithne wala",
-    "{nameLead}jitna bada amount utni badi smile, aur {amount} to seedha shine hai"
+    "{nameLead}{amount} aaya to server raat bhar tik jayega",
+    "{nameLead}{amount} se next build ka fuel ready ho jayega",
+    "{nameLead}{amount} support nahi, seedha push hai",
+    "{nameLead}{amount} se kaam visibly aage badhega",
+    "{nameLead}{amount} ka impact seedha uptime par padta hai",
+    "{nameLead}{amount} ka matlab bot aur build dono stable",
+    "{nameLead}{amount} se coding night thodi aur lambi chalegi",
+    "{nameLead}{amount} clean support bracket me aata hai",
+    "{nameLead}{amount} se bot ka confidence alag level pakad leta hai",
+    "{nameLead}{amount} se next feature ko hawa mil jati hai"
   ];
 
   const closers = [
-    "thoda aur bada likh do to bot aapko legend bolne lagega",
-    "custom me haath kholo to scene aur pyara ho jayega",
-    "agar dil aur bole to 501 ke upar bhi duniya khuli hai",
-    "aaj meherbani ka slider thoda right me kheench do",
-    "UPI ready hai, bas aapka final hukum chahiye",
-    "seedha entry karo aur bot ko garv feel karwa do",
-    "ek baar amount bada karke dekhna, speech bhi aur filmi ho jayegi",
-    "QR to tayyar hai, ab bas aapka generous moment chahiye",
-    "server bach jayega, pet bhi shayad maan jayega",
-    "yeh chance dobara mila to bot phir se yaad dila dega"
+    "custom box bhi khula hai agar mood aur bada ho",
+    "UPI ready hai, bas final tap aapka chahiye",
+    "agar haath khul raha ho to aur upar bhi ja sakte ho",
+    "QR yahin hai, delay ki zarurat nahi",
+    "is mood ko aadhe raste mat chhodo",
+    "ek clean tap aur scene set",
+    "aaj number thoda bold likhne me hi fayda hai",
+    "agar aur support bacha ho to custom me likh do",
+    "yeh waqt seedha finish maang raha hai",
+    "ab bas amount final karo aur UPI kholo"
   ];
 
   const thanksOpeners = [
-    "Aaj ka server ka intejam ho gaya",
-    "Sach bolun to bot ka dil pighal gaya",
-    "Return dekhte hi faceplate pe smile aa gayi",
-    "Payment se hawa badal gayi boss",
-    "Yeh comeback mast tha",
-    "Bot ne seedha thank-you mode on kar diya",
-    "Ab lag raha hai build akela nahi hai",
-    "Jo current aaya hai woh kamaal ka hai",
-    "Donation return pakad liya gaya",
-    "Dil se salute boss"
+    "Aaj ka server sambhal gaya",
+    "Return dekhte hi bot smile karne laga",
+    "Yeh comeback solid tha",
+    "Support landing clean mili",
+    "Screen par wapas aate hi mood better ho gaya",
+    "Yeh payment return strong laga",
+    "Bot ne thank you mode on kar diya",
+    "Ab build thoda halka saans le raha hai",
+    "Yeh support seedha kaam aayega",
+    "Return capture ho gaya boss"
   ];
 
   const thanksClosers = [
-    "ab agar pet ka bhi intejam kara do to kahani poori ho jayegi",
-    "thoda aur pyaar bacha ho to custom box abhi bhi yahin hai",
-    "next round ke liye bot phir se ready baitha hai",
-    "ab arcade bhi khelo aur mood ho to aur current bhejo",
-    "yeh gesture seedha memory me save ho gaya",
-    "aaj ki mehnat thodi aur strong lag rahi hai",
-    "screen ke is paar se proper thank you ja raha hai",
-    "smile permanent ho gayi hai boss",
-    "UPI ka raasta yaad rahe to bura nahi hoga",
-    "ab bot aapko apna banda maan raha hai"
+    "agar pet ka bhi intejam ho jaye to din ban jayega",
+    "agar mood bacha ho to ek aur round bhi chalega",
+    "custom amount abhi bhi aapka wait kar raha hai",
+    "Again Donate button bhi isi liye yahin rakha hai",
+    "yeh support seedha yaad rakha jayega",
+    "ab kaam aur better pace pakdega",
+    "agar phir se tap karoge to bot aur zyada tarif karega",
+    "aaj ka gratitude properly save ho gaya",
+    "ab aap repeat supporter zone ke kareeb ho",
+    "yeh help seedha useful niklegi"
+  ];
+
+  const repeatPraise = [
+    "Pehli baar ka support bhi strong lag raha hai.",
+    "Repeat support dekh ke bot ka respect aur badh gaya.",
+    "Aap ab regular support mode me aa gaye ho.",
+    "Itni baar laut kar aana legend energy lagti hai.",
+    "Ab to bot aapko VIP supporter bol raha hai."
   ];
 
   const amountProfiles = [
     {
-      max: 99,
-      title: "Warm up detected.",
-      copy: "Entry achhi hai, lekin bot bol raha hai ki aaj haath thoda aur khul sakta hai.",
-      text: "Yeh opening donation hai. Dil aur khule to amount bhi badh sakta hai.",
-      nudge: "Warm up ho gaya. Ab next click me aur current bharo.",
-      stickerTop: "WARM MODE",
-      stickerSide: "UPGRADE"
-    },
-    {
-      max: 250,
-      title: "Clean support locked.",
-      copy: "Ab baat bani. Is tier pe bot seedha respect mode me aa jata hai.",
-      text: "Yeh amount sun ke bot ne straight posture le liya hai.",
-      nudge: "Chaaho to custom amount se is smile ko aur wide kar sakte ho.",
-      stickerTop: "RESPECT",
-      stickerSide: "SOLID"
+      max: 180,
+      title: "Warm support locked.",
+      copy: "Yeh start clean hai, lekin aaj amount thoda aur upar bhi achha lagega.",
+      text: "Warm tier selected. Good opening, bigger push still available.",
+      nudge: "Agar mood ho to next jump 251 ya uske upar rakho.",
+      stickerTop: "WARM",
+      stickerSide: "START"
     },
     {
       max: 500,
-      title: "Bot happy mode.",
-      copy: "Is range me aate hi bot ka sarcasm halka aur gratitude heavy ho jata hai.",
-      text: "Ab lag raha hai boss serious support mood me aaye hain.",
-      nudge: "251 ke baad 501 door nahi hota. Bas ek aur mood chahiye.",
-      stickerTop: "HAPPY BOT",
-      stickerSide: "LOUD"
+      title: "Strong support detected.",
+      copy: "Yeh range real help wali range hai. Bot yahan se proper serious ho jata hai.",
+      text: "Strong tier selected. Build ko clean fuel mil raha hai.",
+      nudge: "Custom amount se isko aur heavy push me badal sakte ho.",
+      stickerTop: "STRONG",
+      stickerSide: "LIVE"
     },
     {
-      max: 999,
-      title: "Server saver selected.",
-      copy: "Iss level pe bot sirf bol nahi raha, andar se clap bhi kar raha hai.",
-      text: "Heavy support detect hua hai. Build ko asli fuel isi zone me milta hai.",
-      nudge: "Agar momentum chal gaya hai to custom box me aur bhi bada number achha lagega.",
-      stickerTop: "SERVER SAVE",
-      stickerSide: "BOSS"
+      max: 1000,
+      title: "Heavy support mode.",
+      copy: "Iss bracket me bot sirf khush nahi hota, seedha proud feel karta hai.",
+      text: "Heavy tier selected. Yeh amount visibly kaam aata hai.",
+      nudge: "Agar momentum bana hua hai to 1101 ya custom aur clean lagega.",
+      stickerTop: "HEAVY",
+      stickerSide: "BOOST"
     },
     {
       max: Number.MAX_SAFE_INTEGER,
       title: "Legend amount entered.",
-      copy: "Yeh woh zone hai jahan bot seedha aapko sponsor energy bolne lagta hai.",
-      text: "Ab to bot ko lag raha hai ki aaj uparwala aapke through online aaya hai.",
-      nudge: "Itna likh diya hai to UPI khol ke finish bhi kar do boss.",
+      copy: "Yeh direct premium support zone hai. Bot isko seedha big move maan raha hai.",
+      text: "Legend tier selected. Is amount ka impact seedha long-term feel hota hai.",
+      nudge: "UPI kholo aur isko clean finish do. Bot yeh scene yaad rakhega.",
       stickerTop: "LEGEND",
       stickerSide: "MAX"
     }
@@ -361,21 +363,65 @@ function setupDonatePage() {
   const speechBank = buildSpeechBank();
   const botState = loadBotState();
 
+  function loadSupportState() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(supportStateKey) || "{}");
+      return {
+        returns: Number.isFinite(parsed.returns) ? parsed.returns : 0,
+        repeatClicks: Number.isFinite(parsed.repeatClicks) ? parsed.repeatClicks : 0,
+        lastAmount: Number.isFinite(parsed.lastAmount) ? parsed.lastAmount : 251
+      };
+    } catch (error) {
+      return { returns: 0, repeatClicks: 0, lastAmount: 251 };
+    }
+  }
+
+  function saveSupportState(nextState) {
+    try {
+      localStorage.setItem(supportStateKey, JSON.stringify(nextState));
+    } catch (error) {
+      // Ignore storage issues.
+    }
+  }
+
+  const supportState = loadSupportState();
+
   function playerLead() {
     return playerName ? `${playerName}, ` : "";
+  }
+
+  function availableVoices() {
+    if (!("speechSynthesis" in window)) {
+      return [];
+    }
+    return window.speechSynthesis.getVoices();
+  }
+
+  function voiceScore(voice) {
+    const lang = (voice.lang || "").toLowerCase();
+    const name = (voice.name || "").toLowerCase();
+    let score = 0;
+    if (lang.includes("en-in")) score += 18;
+    if (lang.includes("hi-in")) score += 14;
+    if (name.includes("india")) score += 10;
+    if (name.includes("neural")) score += 6;
+    if (name.includes("microsoft")) score += 4;
+    if (name.includes("google")) score += 3;
+    if (name.includes("female") || name.includes("heera") || name.includes("swara")) score += 3;
+    if (voice.localService) score += 2;
+    return score;
   }
 
   function speechVoice() {
     if (!("speechSynthesis" in window)) {
       return null;
     }
-    const voices = window.speechSynthesis.getVoices();
-    return (
-      voices.find((voice) => /hi-in|en-in/i.test(voice.lang)) ||
-      voices.find((voice) => /india|hindi/i.test(voice.name)) ||
-      voices[0] ||
-      null
-    );
+    const voices = availableVoices();
+    return voices.sort((left, right) => voiceScore(right) - voiceScore(left))[0] || null;
+  }
+
+  if ("speechSynthesis" in window && typeof window.speechSynthesis.addEventListener === "function") {
+    window.speechSynthesis.addEventListener("voiceschanged", speechVoice);
   }
 
   function setBotMood(mood) {
@@ -389,9 +435,19 @@ function setupDonatePage() {
     });
   }
 
+  function supportTierText() {
+    const repeatCount = supportState.returns + supportState.repeatClicks;
+    return repeatPraise[Math.min(repeatCount, repeatPraise.length - 1)];
+  }
+
+  function makeLine(display, spoken = display) {
+    return { display, spoken };
+  }
+
   function speakBot(line, mood = "talk") {
-    lastSpokenLine = line;
-    setText("comic-speech", line);
+    const payload = typeof line === "string" ? makeLine(line) : line;
+    lastSpokenLine = payload.display;
+    setText("comic-speech", payload.display);
     setBotMood(mood);
     window.setTimeout(() => {
       if (!(thanksOverlay instanceof HTMLElement) || thanksOverlay.hidden) {
@@ -405,13 +461,16 @@ function setupDonatePage() {
 
     try {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(line);
+      const utterance = new SpeechSynthesisUtterance(payload.spoken);
       const voice = speechVoice();
       if (voice) {
         utterance.voice = voice;
+        utterance.lang = voice.lang || "en-IN";
+      } else {
+        utterance.lang = "en-IN";
       }
-      utterance.rate = 1;
-      utterance.pitch = mood === "smile" ? 1.18 : 1.08;
+      utterance.rate = mood === "smile" ? 0.92 : 0.9;
+      utterance.pitch = mood === "smile" ? 1.02 : 0.98;
       utterance.volume = 1;
       utterance.onend = () => {
         if (!(thanksOverlay instanceof HTMLElement) || thanksOverlay.hidden) {
@@ -444,9 +503,10 @@ function setupDonatePage() {
     const index = (botState.cursor + (offsetMap[kind] || 0) + amount) % speechBank.length;
     botState.cursor = (botState.cursor + 37) % speechBank.length;
     saveBotState(botState);
-    return speechBank[index]
+    const line = speechBank[index]
       .replace("{nameLead}", playerLead())
       .replace("{amount}", formatAmount(amount));
+    return makeLine(`${line} ${supportTierText()}`, `${line}. ${supportTierText()}`);
   }
 
   function nextThanksLine(amount) {
@@ -454,7 +514,17 @@ function setupDonatePage() {
     const closer = thanksClosers[(botState.cursor + amount * 3) % thanksClosers.length];
     botState.cursor = (botState.cursor + 29) % speechBank.length;
     saveBotState(botState);
-    return `${playerLead()}${starter}, ${formatAmount(amount)} ne kaam kar diya, ${closer}.`;
+    return makeLine(
+      `${playerLead()}${starter} ${formatAmount(amount)} ke saath aa gaya. ${closer}`,
+      `${playerLead()}${starter}. ${formatAmount(amount)} ke saath aa gaya. ${closer}`
+    );
+  }
+
+  function sendoffLine(amount) {
+    return makeLine(
+      `${playerLead()}UPI khul raha hai. ${formatAmount(amount)} ready hai. Wapas aate hi main phir bolunga.`,
+      `${playerLead()}UPI khul raha hai. ${formatAmount(amount)} ready hai. Wapas aate hi main phir bolunga.`
+    );
   }
 
   function buildUpiUrl(amount) {
@@ -495,6 +565,13 @@ function setupDonatePage() {
     return selectedAmount;
   }
 
+  function syncActiveAmountCard(amount) {
+    amountCards.forEach((card) => {
+      const cardAmount = Number(card.getAttribute("data-amount") || "0");
+      card.classList.toggle("active", cardAmount === amount);
+    });
+  }
+
   function applyContent(amount, options = {}) {
     const { speak = false, speechKind = "select" } = options;
     const safeAmount = Math.max(1, Math.floor(amount));
@@ -510,7 +587,7 @@ function setupDonatePage() {
     setText("comic-copy", profile.copy);
     setText("donation-nudge", profile.nudge);
     setText("comic-sticker-top", profile.stickerTop);
-    setText("comic-sticker-side", safeAmount >= 1000 ? "MEGA" : safeAmount >= 501 ? "POWER" : safeAmount >= 251 ? "LOUD" : "UPI");
+    setText("comic-sticker-side", safeAmount >= 1000 ? "MAX" : safeAmount >= 501 ? "POWER" : safeAmount >= 251 ? "SOLID" : "UPI");
     setText("qr-caption", `QR generated for ${label}.`);
 
     if (openUpi instanceof HTMLAnchorElement) {
@@ -522,6 +599,9 @@ function setupDonatePage() {
     if (speak) {
       speakBot(nextPitchLine(speechKind, safeAmount), "talk");
     }
+
+    supportState.lastAmount = safeAmount;
+    saveSupportState(supportState);
   }
 
   amountCards.forEach((card) => {
@@ -529,8 +609,8 @@ function setupDonatePage() {
       if (!(card instanceof HTMLButtonElement)) {
         return;
       }
-      selectedAmount = Number(card.dataset.amount ?? "101");
-      amountCards.forEach((item) => item.classList.toggle("active", item === card));
+      selectedAmount = Number(card.dataset.amount ?? "251");
+      syncActiveAmountCard(selectedAmount);
       if (customAmountInput instanceof HTMLInputElement) {
         customAmountInput.value = "";
       }
@@ -556,7 +636,7 @@ function setupDonatePage() {
     copyUpi.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(upiId);
-        copyUpi.textContent = "Copied";
+        copyUpi.textContent = "UPI Copied";
         speakBot(nextPitchLine("copy", resolveAmount()), "talk");
         window.setTimeout(() => {
           copyUpi.textContent = "Copy UPI ID";
@@ -581,7 +661,7 @@ function setupDonatePage() {
     openUpi.addEventListener("click", () => {
       const amount = resolveAmount();
       sessionStorage.setItem(returnKey, JSON.stringify({ amount, at: Date.now() }));
-      speakBot(nextPitchLine("open", amount), "talk");
+      speakBot(sendoffLine(amount), "talk");
     });
   }
 
@@ -610,6 +690,34 @@ function setupDonatePage() {
     thanksClose.addEventListener("click", closeThanksOverlay);
   }
 
+  if (thanksDonateAgain instanceof HTMLButtonElement) {
+    thanksDonateAgain.addEventListener("click", () => {
+      supportState.repeatClicks += 1;
+      saveSupportState(supportState);
+      closeThanksOverlay();
+      const ladder = [101, 251, 501, 1101, 2101];
+      const current = resolveAmount();
+      const nextPreset = ladder.find((amount) => amount > current) || current + 500;
+      selectedAmount = nextPreset;
+      if (customAmountInput instanceof HTMLInputElement) {
+        customAmountInput.value = "";
+      }
+      syncActiveAmountCard(selectedAmount);
+      applyContent(selectedAmount, { speak: true, speechKind: "repeat" });
+      donateRoot.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function updateThanksOverlay(amount) {
+    const totalReturns = supportState.returns;
+    const welcome = playerName ? `${playerName}, welcome back.` : "Welcome back.";
+    const praise = repeatPraise[Math.min(Math.max(0, totalReturns - 1), repeatPraise.length - 1)];
+    setText("thanks-core", formatAmount(amount));
+    setText("thanks-overlay-title", welcome);
+    setText("thanks-overlay-text", `${formatAmount(amount)} return capture ho gaya. ${praise}`);
+    setText("thanks-overlay-nudge", "Aaj ka server set ho gaya. Agar mood ho to Again Donate se ek aur round chala do.");
+  }
+
   function maybeHandleReturn() {
     if (document.visibilityState === "hidden") {
       return;
@@ -623,13 +731,19 @@ function setupDonatePage() {
       if (!payload || !payload.amount) {
         return;
       }
+      if (handledReturnAt === payload.at) {
+        return;
+      }
+      handledReturnAt = payload.at;
       sessionStorage.removeItem(returnKey);
+      supportState.returns += 1;
+      supportState.lastAmount = payload.amount;
+      saveSupportState(supportState);
       openThanksOverlay();
-      setText("thanks-core", formatAmount(payload.amount));
-      setText("thanks-overlay-title", playerName ? `${playerName}, welcome back boss.` : "Payment return detected.");
-      setText("thanks-overlay-text", playerName ? `${playerName}, aaj ka server ka intejam ho gaya.` : "Aaj ka server ka intejam ho gaya.");
-      setText("thanks-overlay-nudge", "Lekin pet ka bhi intejam kar do boss, mood ho to ek aur round chala do.");
-      speakBot(nextThanksLine(payload.amount), "smile");
+      updateThanksOverlay(payload.amount);
+      window.setTimeout(() => {
+        speakBot(nextThanksLine(payload.amount), "smile");
+      }, 420);
     } catch (error) {
       sessionStorage.removeItem(returnKey);
     }
@@ -637,12 +751,20 @@ function setupDonatePage() {
 
   if (playerLine instanceof HTMLElement && playerName) {
     playerLine.hidden = false;
-    playerLine.textContent = `${playerName} detected from arcade scores.`;
+    playerLine.textContent = `Arcade player: ${playerName}`;
   }
 
-  document.addEventListener("visibilitychange", maybeHandleReturn);
-  window.addEventListener("pageshow", maybeHandleReturn);
-  window.addEventListener("focus", maybeHandleReturn);
+  function scheduleReturnCheck() {
+    window.setTimeout(maybeHandleReturn, 320);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      scheduleReturnCheck();
+    }
+  });
+  window.addEventListener("pageshow", scheduleReturnCheck);
+  window.addEventListener("focus", scheduleReturnCheck);
 
   applyContent(selectedAmount);
 }

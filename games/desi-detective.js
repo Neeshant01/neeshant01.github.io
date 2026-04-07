@@ -1,351 +1,681 @@
 (() => {
-  const root = document.getElementById("game-root");
-  const progressStore = new Arcade.ProgressStore("desi-detective");
-  const nodes = {
-    intro: {
-      title: "Radio Room",
-      speaker: "Desk Sergeant",
-      text: "The station ledger vanished during the evening power cut. Three people were near the room: Farid the tea vendor, Meera from archives, and Tapan the courier.",
-      choices: [
-        { label: "Question Farid at the courtyard stall", next: "farid" },
-        { label: "Check archive logs with Meera", next: "meera" },
-        { label: "Meet Tapan on the rooftop path", next: "tapan" }
-      ]
-    },
-    farid: {
-      title: "Courtyard Stall",
-      speaker: "Farid",
-      text: "Farid swears he saw a raincoat hurry past the radio room. He points to a dropped tea cup near the back gate and says Meera looked nervous.",
-      choices: [
-        { label: "Inspect the tea cup", next: "teaCup", addClue: "Tea stain on evidence sleeve" },
-        { label: "Press Farid on the raincoat story", next: "faridLie", trust: { farid: -1 } },
-        { label: "Move to archive corridor", next: "meera" }
-      ]
-    },
-    meera: {
-      title: "Archive Corridor",
-      speaker: "Meera",
-      text: "Meera says the power cut forced her to check backup logs. She mentions a failed keycard swipe near the radio room and quietly asks why Farid always points at everyone else.",
-      choices: [
-        { label: "Review the keycard log", next: "keycard", addClue: "Failed keycard at 7:42 PM" },
-        { label: "Ask why she was near the radio room", next: "meeraPressure", trust: { meera: -1 } },
-        { label: "Head to the rooftop path", next: "tapan" }
-      ]
-    },
-    tapan: {
-      title: "Rooftop Path",
-      speaker: "Tapan",
-      text: "Tapan says he heard a metal locker snap open and smelled jasmine perfume by the maintenance stairs. He also saw someone carrying a flat file under a raincoat.",
-      choices: [
-        { label: "Inspect the maintenance locker", next: "locker", addClue: "Broken locker latch" },
-        { label: "Question the jasmine detail", next: "jasmine", addClue: "Jasmine perfume trace" },
-        { label: "Return to the station hall", next: "intro" }
-      ]
-    },
-    teaCup: {
-      title: "Evidence Table",
-      speaker: "Observation",
-      text: "The tea cup carries a blue archive label stuck to the base. Farid did not mention that part.",
-      choices: [
-        { label: "Log the archive label and revisit Meera", next: "meera", trust: { meera: 1 } },
-        { label: "Keep pressure on Farid", next: "faridLie" }
-      ]
-    },
-    faridLie: {
-      title: "Farid Slips",
-      speaker: "Farid",
-      text: "Under pressure, Farid admits he never saw the face. He only saw a raincoat and guessed the person was Meera because of the archive label near the cup.",
-      choices: [
-        { label: "Note the guess and move to archives", next: "meera", trust: { farid: -1 } },
-        { label: "Check the back gate anyway", next: "backGate", addClue: "Mud print with courier sole" }
-      ]
-    },
-    keycard: {
-      title: "Security Console",
-      speaker: "System Log",
-      text: "A failed archive keycard swipe hit the radio room, but one second later the maintenance door opened correctly with a courier access tag.",
-      choices: [
-        { label: "Confront Tapan about maintenance access", next: "tapanConfront", trust: { tapan: -1 } },
-        { label: "Take the log and meet Tapan on the rooftop path", next: "tapan", trust: { tapan: -1 } },
-        { label: "Tell Meera what the log shows", next: "meeraPressure", trust: { meera: 1 } }
-      ]
-    },
-    meeraPressure: {
-      title: "Meera Pushback",
-      speaker: "Meera",
-      text: "Meera stays calm. She says her card failed because the archive wing was already locked. She also reveals a hidden cold-room shelf that only maintenance can open.",
-      choices: [
-        { label: "Search the cold room if the clues support it", next: "coldRoomGate" },
-        { label: "Still accuse Meera", next: "ending-meera" }
-      ]
-    },
-    locker: {
-      title: "Maintenance Locker",
-      speaker: "Observation",
-      text: "Inside the locker is a spare courier tag and a thin paper edge torn from an official ledger sleeve.",
-      choices: [
-        { label: "Add the torn sleeve clue and confront Tapan", next: "tapanConfront", addClue: "Torn ledger sleeve edge" },
-        { label: "Cross-check the cold room lead", next: "coldRoomGate" }
-      ]
-    },
-    jasmine: {
-      title: "Perfume Trace",
-      speaker: "Observation",
-      text: "The jasmine trace stops near the cold room vent. It is too clean to belong to Farid's stall or the archive hall.",
-      choices: [
-        { label: "Use the trace to search the cold room", next: "coldRoomGate", trust: { meera: 1 } },
-        { label: "Accuse Tapan from the rooftop evidence", next: "ending-tapan" }
-      ]
-    },
-    backGate: {
-      title: "Back Gate",
-      speaker: "Observation",
-      text: "A muddy print matches courier boots, but the drag pattern suggests someone carried the ledger only part of the way before hiding it.",
-      choices: [
-        { label: "Follow the trail to the cold room", next: "coldRoomGate" },
-        { label: "Close the case on Farid's misdirection", next: "ending-farid" }
-      ]
-    },
-    tapanConfront: {
-      title: "Courier Bay",
-      speaker: "Tapan",
-      text: "Tapan cracks under pressure and admits he opened the maintenance door. But he says he did it for Meera, who promised the ledger only needed to be hidden for one night.",
-      choices: [
-        { label: "Push deeper and open the cold room", next: "coldRoomGate", addClue: "Courier admits maintenance access" },
-        { label: "Close the case on Tapan", next: "ending-tapan" }
-      ]
-    },
-    coldRoomGate: {
-      title: "Cold Room Door",
-      speaker: "Decision",
-      text: "You now have enough fragments to test one final theory: the ledger was hidden in the cold room to delay an audit.",
-      choices: [
-        { label: "Search the cold room carefully", next: "ending-master", requires: ["Failed keycard at 7:42 PM", "Jasmine perfume trace"] },
-        { label: "Blame Meera without entering", next: "ending-meera" },
-        { label: "Blame Tapan and close fast", next: "ending-tapan" }
-      ]
-    },
-    "ending-farid": {
-      ending: true,
-      title: "False Close",
-      endingLabel: "Farid blamed",
-      text: "You close the case on Farid's misdirection, but the ledger never returns. The station clears him two days later. The result is fast, but weak."
-    },
-    "ending-meera": {
-      ending: true,
-      title: "Sharp but Incomplete",
-      endingLabel: "Meera cornered",
-      text: "You accuse Meera and force a confession to hiding the ledger, but you miss the maintenance link. The case closes, yet the full route stays half-shadowed."
-    },
-    "ending-tapan": {
-      ending: true,
-      title: "Courier Fall",
-      endingLabel: "Tapan blamed",
-      text: "Tapan takes the fall for moving the ledger, but the motive remains muddy. The station accepts it, though the truth still feels unfinished."
-    },
-    "ending-master": {
-      ending: true,
-      title: "Full Solve",
-      endingLabel: "Cold room truth",
-      text: "Inside the cold room you find the ledger sealed behind frozen sample crates. Meera planned the delay, Tapan opened the route, and Farid accidentally scattered the trail. The full case locks into place."
-    }
-  };
+  const canvas = document.getElementById("game-canvas");
+  if (!(canvas instanceof HTMLCanvasElement)) {
+    return;
+  }
 
-  const suspectBase = {
-    farid: { name: "Farid", role: "Tea Vendor", status: "Talkative witness" },
-    meera: { name: "Meera", role: "Archive Clerk", status: "Calm under pressure" },
-    tapan: { name: "Tapan", role: "Courier", status: "Moves between doors" }
-  };
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+
+  const progressStore = new Arcade.ProgressStore("desi-detective");
+  const progress = progressStore.load({ endings: [] });
 
   const shell = new Arcade.GameShell({
     gameId: "desi-detective",
     hud: [
-      { id: "chapter", label: "Scene", value: "1" },
-      { id: "clues", label: "Clues", value: "0" },
-      { id: "score", label: "Case Score", value: "0" },
+      { id: "zone", label: "Zone", value: "Station" },
+      { id: "clues", label: "Clues", value: "0 / 3" },
+      { id: "heat", label: "Heat", value: "0%" },
       { id: "time", label: "Time", value: "00:00" }
     ],
     board: {
       id: "main",
       title: "Top 10 Case Files",
       compare: (a, b) => (b.score - a.score) || (a.time - b.time),
-      renderEntry: (entry, index, escapeHtml) => `
+      renderEntry: (entry, index, escapeHtml, formatTime) => `
         <div class="board-row">
           <span class="board-rank">#${index + 1}</span>
           <span class="board-name">${escapeHtml(entry.name)}</span>
           <span class="board-score">${entry.score}</span>
-          <span class="board-meta">${escapeHtml(entry.ending)} · ${Arcade.formatTime(entry.time)}</span>
+          <span class="board-meta">${escapeHtml(entry.ending)} | ${formatTime(entry.time)}</span>
         </div>
       `,
-      summarize: (entry, formatTime) => `${entry.ending} · ${formatTime(entry.time)} by ${entry.name}`
+      summarize: (entry, formatTime) => `${entry.ending} | ${formatTime(entry.time)} by ${entry.name}`
     },
     noteTitle: "Case Board",
-    noteBody: "Track clues, watch the cold room lead, and use full evidence before closing the case.",
+    noteBody: "Collect clues, question suspects, then return to the case board for the final call.",
     onStart: startGame,
-    onRestart: restartGame
+    onRestart: restartGame,
+    onPauseChange: (nextPaused) => {
+      paused = nextPaused;
+      shell.setStatus(nextPaused ? "Case paused." : "Case live.");
+    }
   });
 
-  let progress = progressStore.load({ endings: [], chapterSelectUnlocked: false });
-  let state = null;
-  let timerId = 0;
+  const world = {
+    width: canvas.width,
+    height: canvas.height,
+    walls: [
+      { x: 84, y: 84, w: 180, h: 132, label: "Tea Stall" },
+      { x: 332, y: 64, w: 212, h: 154, label: "Archive Wing" },
+      { x: 640, y: 102, w: 196, h: 122, label: "Maintenance" },
+      { x: 138, y: 312, w: 184, h: 132, label: "Courtyard" },
+      { x: 402, y: 304, w: 176, h: 150, label: "Cold Room" },
+      { x: 684, y: 318, w: 150, h: 126, label: "Roof Access" }
+    ]
+  };
 
-  function createState(startNode = "intro") {
+  const suspects = [
+    {
+      id: "farid",
+      name: "Farid",
+      x: 176,
+      y: 258,
+      color: "#ffd76b",
+      line: "Farid says the raincoat moved toward the archive wing.",
+      evidence: "Tea stain points away from the stall."
+    },
+    {
+      id: "meera",
+      name: "Meera",
+      x: 434,
+      y: 254,
+      color: "#8e7cff",
+      line: "Meera talks calm, but avoids the cold-room question.",
+      evidence: "Only Meera knew which shelf the ledger used."
+    },
+    {
+      id: "tapan",
+      name: "Tapan",
+      x: 760,
+      y: 264,
+      color: "#76ecff",
+      line: "Tapan admits the maintenance door was opened on request.",
+      evidence: "Tapan moved the route, but not the motive."
+    }
+  ];
+
+  const clueSpots = [
+    {
+      id: "keycard",
+      label: "Failed keycard",
+      x: 548,
+      y: 146,
+      color: "#76ecff",
+      text: "Archive keycard failed at 7:42 PM."
+    },
+    {
+      id: "perfume",
+      label: "Jasmine trace",
+      x: 494,
+      y: 360,
+      color: "#ff79b8",
+      text: "Jasmine trace ends near the cold-room vent."
+    },
+    {
+      id: "sleeve",
+      label: "Ledger sleeve",
+      x: 720,
+      y: 220,
+      color: "#ffd76b",
+      text: "Torn ledger sleeve hidden near maintenance."
+    }
+  ];
+
+  const patrols = [
+    {
+      x: 288,
+      y: 274,
+      speed: 102,
+      angle: 0,
+      path: [
+        { x: 288, y: 274 },
+        { x: 378, y: 274 },
+        { x: 378, y: 448 },
+        { x: 288, y: 448 }
+      ],
+      index: 1,
+      radius: 12
+    },
+    {
+      x: 610,
+      y: 260,
+      speed: 110,
+      angle: Math.PI,
+      path: [
+        { x: 610, y: 260 },
+        { x: 864, y: 260 },
+        { x: 864, y: 466 },
+        { x: 610, y: 466 }
+      ],
+      index: 1,
+      radius: 12
+    }
+  ];
+
+  const caseBoard = { x: 494, y: 486, radius: 28 };
+  const input = { up: false, down: false, left: false, right: false };
+
+  let player;
+  let collectedClues;
+  let questioned;
+  let notes;
+  let heat = 0;
+  let running = false;
+  let paused = false;
+  let ended = false;
+  let accusationMode = false;
+  let startTime = 0;
+  let rafId = 0;
+  let lastTime = 0;
+
+  function createPlayer() {
     return {
-      nodeId: startNode,
-      clues: new Set(),
-      trust: { farid: 0, meera: 0, tapan: 0 },
-      score: 0,
-      startedAt: Date.now()
+      x: 98,
+      y: 486,
+      radius: 14,
+      speed: 214
     };
   }
 
-  function applyChoice(choice) {
-    if (choice.requires && !choice.requires.every((clue) => state.clues.has(clue))) {
-      shell.setStatus("That route needs more evidence first.");
-      shell.audio.cue("fail");
-      return;
-    }
-
-    if (choice.addClue) {
-      state.clues.add(choice.addClue);
-      state.score += 120;
-    }
-    if (choice.trust) {
-      Object.entries(choice.trust).forEach(([key, value]) => {
-        state.trust[key] += value;
-      });
-    }
-    state.score += 35;
-    state.nodeId = choice.next;
-    shell.audio.cue("click");
-    render();
+  function resetPatrols() {
+    patrols.forEach((guard) => {
+      guard.x = guard.path[0].x;
+      guard.y = guard.path[0].y;
+      guard.index = 1;
+      guard.angle = 0;
+    });
   }
 
-  function finishCase(node) {
-    window.clearTimeout(timerId);
-    const time = Math.floor((Date.now() - state.startedAt) / 1000);
-    const endingBonus = node.endingLabel === "Cold room truth" ? 600 : node.endingLabel === "Meera cornered" ? 320 : 220;
-    const trustBonus = Object.values(state.trust).reduce((sum, value) => sum + Math.max(0, value) * 20, 0);
-    const score = state.score + state.clues.size * 90 + endingBonus + trustBonus - time * 3;
-    progress.endings = Array.from(new Set([...progress.endings, node.endingLabel]));
-    if (progress.endings.length > 0) {
-      progress.chapterSelectUnlocked = true;
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function pointInRect(x, y, rect, padding = 0) {
+    return x > rect.x - padding &&
+      x < rect.x + rect.w + padding &&
+      y > rect.y - padding &&
+      y < rect.y + rect.h + padding;
+  }
+
+  function blocked(x, y, radius) {
+    return world.walls.some((wall) => pointInRect(x, y, wall, radius));
+  }
+
+  function zoneName() {
+    const zones = [
+      { name: "Tea Stall", rect: world.walls[0] },
+      { name: "Archive", rect: world.walls[1] },
+      { name: "Maintenance", rect: world.walls[2] },
+      { name: "Courtyard", rect: world.walls[3] },
+      { name: "Cold Room", rect: world.walls[4] },
+      { name: "Roof Access", rect: world.walls[5] }
+    ];
+    const found = zones.find((zone) => pointInRect(player.x, player.y, zone.rect, 42));
+    return found ? found.name : "Station";
+  }
+
+  function setDynamicNote() {
+    const clueList = clueSpots
+      .filter((spot) => collectedClues.has(spot.id))
+      .map((spot) => spot.label)
+      .join(", ");
+    if (accusationMode) {
+      shell.setNote("Case Board", "Board unlocked. Press 1 for Farid, 2 for Meera, 3 for Tapan.");
+      return;
     }
-    progressStore.save(progress);
+    if (!clueList) {
+      shell.setNote("Case Board", "No clue logged yet. Search the archive, cold-room path, and maintenance corner.");
+      return;
+    }
+    shell.setNote("Case Board", `Logged clues: ${clueList}. Question at least two suspects before the final call.`);
+  }
+
+  function updateHud() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    shell.updateStat("zone", zoneName());
+    shell.updateStat("clues", `${collectedClues.size} / 3`);
+    shell.updateStat("heat", `${Math.floor(heat)}%`);
+    shell.updateStat("time", Arcade.formatTime(elapsed));
+  }
+
+  function finishCase(ending, success) {
+    if (ended) {
+      return;
+    }
+    ended = true;
+    running = false;
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const cleanBonus = Math.max(0, 240 - Math.floor(heat) * 2);
+    const score = Math.max(
+      120,
+      (success ? 780 : 260) +
+      collectedClues.size * 180 +
+      questioned.size * 80 +
+      cleanBonus -
+      elapsed * 3
+    );
+
+    if (!progress.endings.includes(ending)) {
+      progress.endings.push(ending);
+      progressStore.save(progress);
+    }
+
+    shell.audio.cue(success ? "success" : "fail");
     shell.finishRun({
-      title: node.title,
-      text: node.text,
+      title: ending,
+      text: success
+        ? "Evidence matched the route and the case closed clean."
+        : "The call missed the full route and the file closed under pressure.",
       stats: [
-        `Ending: ${node.endingLabel}`,
-        `Case Score: ${score}`,
-        `Clues Found: ${state.clues.size}`,
-        `Time: ${Arcade.formatTime(time)}`
+        `Ending: ${ending}`,
+        `Score: ${score}`,
+        `Clues: ${collectedClues.size}/3`,
+        `Time: ${Arcade.formatTime(elapsed)}`
       ],
       entry: {
         score,
-        time,
-        ending: node.endingLabel
+        time: elapsed,
+        ending
       }
     });
   }
 
-  function tickTimer() {
-    const elapsed = Math.floor((Date.now() - state.startedAt) / 1000);
-    shell.updateStat("time", Arcade.formatTime(elapsed));
-    timerId = window.setTimeout(tickTimer, 500);
+  function accuse(targetId) {
+    if (!accusationMode || ended) {
+      return;
+    }
+    if (targetId === "meera" && collectedClues.size === clueSpots.length) {
+      finishCase("Full Solve", true);
+      return;
+    }
+    if (targetId === "meera") {
+      finishCase("Sharp but Incomplete", true);
+      return;
+    }
+    if (targetId === "tapan") {
+      finishCase("Courier Fall", false);
+      return;
+    }
+    finishCase("False Close", false);
   }
 
-  function render() {
-    const node = nodes[state.nodeId];
-    shell.updateStat("chapter", state.nodeId);
-    shell.updateStat("clues", state.clues.size);
-    shell.updateStat("score", state.score);
-    shell.updateStat("time", Arcade.formatTime(Math.floor((Date.now() - state.startedAt) / 1000)));
+  function nearestClue() {
+    return clueSpots.find((spot) => !collectedClues.has(spot.id) && distance(player, spot) < 34) || null;
+  }
 
-    if (node.ending) {
-      finishCase(node);
+  function nearestSuspect() {
+    return suspects.find((suspect) => distance(player, suspect) < 42) || null;
+  }
+
+  function nearCaseBoard() {
+    return Math.hypot(player.x - caseBoard.x, player.y - caseBoard.y) < caseBoard.radius + 18;
+  }
+
+  function interact() {
+    if (ended) {
+      return;
+    }
+    const clue = nearestClue();
+    if (clue) {
+      collectedClues.add(clue.id);
+      notes.push(clue.text);
+      if (notes.length > 4) {
+        notes.shift();
+      }
+      shell.audio.cue("power");
+      shell.setStatus(clue.text);
+      if (collectedClues.size === clueSpots.length) {
+        shell.setStatus("All clues locked. Question the room, then return to the case board.");
+      }
+      setDynamicNote();
       return;
     }
 
-    const chapterButtons = progress.chapterSelectUnlocked
-      ? `
-        <div class="chapter-grid">
-          <button class="choice-card" type="button" data-start="intro"><strong>Start</strong><span>Full case from scene one.</span></button>
-          <button class="choice-card" type="button" data-start="farid"><strong>Courtyard</strong><span>Jump back to Farid.</span></button>
-          <button class="choice-card" type="button" data-start="meera"><strong>Archives</strong><span>Replay the keycard branch.</span></button>
-          <button class="choice-card" type="button" data-start="tapan"><strong>Rooftop</strong><span>Replay the courier branch.</span></button>
-        </div>
-      `
-      : `<p class="muted-line">Unlock one ending to open chapter select.</p>`;
+    const suspect = nearestSuspect();
+    if (suspect) {
+      questioned.add(suspect.id);
+      shell.audio.cue("click");
+      shell.setStatus(suspect.line);
+      if (collectedClues.size === clueSpots.length && questioned.size >= 2) {
+        shell.setStatus(`${suspect.evidence} Return to the case board for the final call.`);
+      }
+      setDynamicNote();
+      return;
+    }
 
-    root.innerHTML = `
-      <section class="dialogue-card">
-        <p class="overlay-kicker">${node.title}</p>
-        <h3>${node.speaker}</h3>
-        <div class="dialogue-line"><p>${node.text}</p></div>
-        <div class="choice-grid">
-          ${node.choices.map((choice, index) => `
-            <button class="choice-card" type="button" data-choice="${index}">
-              <strong>${choice.label}</strong>
-              <span>${choice.requires ? "Needs extra clues." : "Advance the case."}</span>
-            </button>
-          `).join("")}
-        </div>
-      </section>
-      <section class="case-board">
-        <div class="challenge-panel">
-          <h3>Clues</h3>
-          <div class="mini-list">
-            ${Array.from(state.clues).map((clue) => `<div class="dialogue-line">${clue}</div>`).join("") || "<p class='muted-line'>No clues logged yet.</p>"}
-          </div>
-        </div>
-        <div class="challenge-panel">
-          <h3>Suspects</h3>
-          <div class="suspect-grid">
-            ${Object.entries(suspectBase).map(([key, suspect]) => `
-              <div class="suspect-card">
-                <strong>${suspect.name}</strong>
-                <p>${suspect.role}</p>
-                <p class="progress-pill">Trust ${state.trust[key] >= 0 ? "+" : ""}${state.trust[key]}</p>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-        <div class="challenge-panel">
-          <h3>Chapter Select</h3>
-          ${chapterButtons}
-        </div>
-      </section>
-    `;
+    if (nearCaseBoard()) {
+      if (collectedClues.size === clueSpots.length && questioned.size >= 2) {
+        accusationMode = true;
+        shell.audio.cue("success");
+        shell.setStatus("Case board open. Press 1, 2, or 3 to accuse.");
+        setDynamicNote();
+      } else {
+        shell.audio.cue("fail");
+        shell.setStatus("Need all three clues and two suspect talks before the final call.");
+      }
+    }
+  }
 
-    root.querySelectorAll("[data-choice]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const index = Number(button.getAttribute("data-choice"));
-        applyChoice(node.choices[index]);
-      });
-    });
+  function movePlayer(dt) {
+    let moveX = 0;
+    let moveY = 0;
+    if (input.left) moveX -= 1;
+    if (input.right) moveX += 1;
+    if (input.up) moveY -= 1;
+    if (input.down) moveY += 1;
+    if (!moveX && !moveY) {
+      return;
+    }
 
-    root.querySelectorAll("[data-start]").forEach((button) => {
-      button.addEventListener("click", () => {
-        state = createState(button.getAttribute("data-start"));
-        shell.audio.cue("click");
-        render();
-      });
+    const length = Math.hypot(moveX, moveY) || 1;
+    const nextX = clamp(player.x + (moveX / length) * player.speed * dt, player.radius, world.width - player.radius);
+    const nextY = clamp(player.y + (moveY / length) * player.speed * dt, player.radius, world.height - player.radius);
+
+    if (!blocked(nextX, player.y, player.radius)) {
+      player.x = nextX;
+    }
+    if (!blocked(player.x, nextY, player.radius)) {
+      player.y = nextY;
+    }
+  }
+
+  function updatePatrols(dt) {
+    patrols.forEach((guard) => {
+      const target = guard.path[guard.index];
+      const dx = target.x - guard.x;
+      const dy = target.y - guard.y;
+      const distanceToTarget = Math.hypot(dx, dy);
+      if (distanceToTarget < 2) {
+        guard.index = (guard.index + 1) % guard.path.length;
+        return;
+      }
+      guard.angle = Math.atan2(dy, dx);
+      guard.x += (dx / distanceToTarget) * guard.speed * dt;
+      guard.y += (dy / distanceToTarget) * guard.speed * dt;
     });
   }
 
-  function resetState(startNode = "intro") {
-    window.clearTimeout(timerId);
-    state = createState(startNode);
-    tickTimer();
-    render();
+  function updateHeat(dt) {
+    heat = Math.max(0, heat - dt * 5);
+    patrols.forEach((guard) => {
+      const dx = player.x - guard.x;
+      const dy = player.y - guard.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 22) {
+        heat = Math.min(100, heat + 110 * dt);
+        return;
+      }
+      const forwardAngle = guard.angle;
+      const targetAngle = Math.atan2(dy, dx);
+      const angleDelta = Math.atan2(Math.sin(targetAngle - forwardAngle), Math.cos(targetAngle - forwardAngle));
+      if (dist < 168 && Math.abs(angleDelta) < 0.62) {
+        heat = Math.min(100, heat + 38 * dt);
+      }
+    });
+    if (heat >= 100) {
+      finishCase("Case Blown", false);
+    }
+  }
+
+  function drawBackground() {
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#08101a");
+    gradient.addColorStop(1, "#050912");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let index = 0; index < 18; index += 1) {
+      ctx.fillStyle = index % 2 === 0 ? "rgba(118,236,255,0.03)" : "rgba(255,215,107,0.02)";
+      ctx.fillRect(index * 60, 0, 2, canvas.height);
+    }
+  }
+
+  function drawWalls() {
+    world.walls.forEach((wall) => {
+      ctx.fillStyle = "rgba(12, 23, 42, 0.96)";
+      ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
+      ctx.strokeStyle = "rgba(118,236,255,0.18)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(wall.x, wall.y, wall.w, wall.h);
+      ctx.fillStyle = "rgba(245,248,255,0.86)";
+      ctx.font = "12px JetBrains Mono";
+      ctx.fillText(wall.label, wall.x + 14, wall.y + 22);
+    });
+  }
+
+  function drawCaseBoard() {
+    ctx.save();
+    ctx.translate(caseBoard.x, caseBoard.y);
+    ctx.fillStyle = accusationMode ? "rgba(255,215,107,0.35)" : "rgba(118,236,255,0.18)";
+    ctx.beginPath();
+    ctx.arc(0, 0, caseBoard.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.4)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = "#081018";
+    ctx.font = "bold 16px Sora";
+    ctx.textAlign = "center";
+    ctx.fillText("BOARD", 0, 5);
+    ctx.restore();
+  }
+
+  function drawClues() {
+    clueSpots.forEach((spot) => {
+      if (collectedClues.has(spot.id)) {
+        return;
+      }
+      ctx.save();
+      ctx.translate(spot.x, spot.y);
+      ctx.fillStyle = spot.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.75)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "rgba(245,248,255,0.92)";
+      ctx.font = "11px JetBrains Mono";
+      ctx.textAlign = "center";
+      ctx.fillText(spot.label.toUpperCase(), 0, -18);
+      ctx.restore();
+    });
+  }
+
+  function drawSuspects() {
+    suspects.forEach((suspect) => {
+      ctx.save();
+      ctx.translate(suspect.x, suspect.y);
+      ctx.fillStyle = questioned.has(suspect.id) ? "rgba(255,255,255,0.26)" : suspect.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, 15, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.6)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "rgba(245,248,255,0.92)";
+      ctx.font = "12px JetBrains Mono";
+      ctx.textAlign = "center";
+      ctx.fillText(suspect.name, 0, -20);
+      ctx.restore();
+    });
+  }
+
+  function drawPatrols() {
+    patrols.forEach((guard) => {
+      ctx.save();
+      ctx.translate(guard.x, guard.y);
+      ctx.rotate(guard.angle);
+      ctx.fillStyle = "rgba(255,104,140,0.12)";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, 168, -0.62, 0.62);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = "#ff688c";
+      ctx.beginPath();
+      ctx.arc(guard.x, guard.y, guard.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.65)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  }
+
+  function drawPlayer() {
+    ctx.fillStyle = "#76ecff";
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.72)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function drawOverlayText() {
+    const interactLines = [];
+    const clue = nearestClue();
+    const suspect = nearestSuspect();
+    if (clue) {
+      interactLines.push(`Press E to inspect ${clue.label}`);
+    } else if (suspect) {
+      interactLines.push(`Press E to question ${suspect.name}`);
+    } else if (nearCaseBoard()) {
+      interactLines.push(
+        collectedClues.size === clueSpots.length && questioned.size >= 2
+          ? "Press E to open the case board"
+          : "Case board locked"
+      );
+    }
+    if (accusationMode) {
+      interactLines.push("1 = Farid | 2 = Meera | 3 = Tapan");
+    }
+
+    if (!interactLines.length) {
+      return;
+    }
+
+    ctx.fillStyle = "rgba(6,12,24,0.72)";
+    ctx.fillRect(18, canvas.height - 76, 360, 46 + interactLines.length * 16);
+    ctx.strokeStyle = "rgba(118,236,255,0.18)";
+    ctx.strokeRect(18, canvas.height - 76, 360, 46 + interactLines.length * 16);
+    ctx.fillStyle = "#f5f8ff";
+    ctx.font = "14px JetBrains Mono";
+    interactLines.forEach((line, index) => {
+      ctx.fillText(line, 34, canvas.height - 46 + index * 18);
+    });
+  }
+
+  function draw() {
+    if (!player || !(collectedClues instanceof Set) || !(questioned instanceof Set)) {
+      drawBackground();
+      drawWalls();
+      drawCaseBoard();
+      return;
+    }
+    drawBackground();
+    drawWalls();
+    drawCaseBoard();
+    drawClues();
+    drawSuspects();
+    drawPatrols();
+    drawPlayer();
+    drawOverlayText();
+
+    ctx.fillStyle = "rgba(6,12,24,0.88)";
+    ctx.fillRect(canvas.width - 228, 18, 192, 86);
+    ctx.strokeStyle = "rgba(118,236,255,0.18)";
+    ctx.strokeRect(canvas.width - 228, 18, 192, 86);
+    ctx.fillStyle = "#f5f8ff";
+    ctx.font = "12px JetBrains Mono";
+    ctx.fillText("NOTES", canvas.width - 210, 38);
+    ctx.font = "11px JetBrains Mono";
+    notes.slice(-3).forEach((note, index) => {
+      ctx.fillStyle = "rgba(245,248,255,0.78)";
+      ctx.fillText(note.slice(0, 28), canvas.width - 210, 58 + index * 16);
+    });
+  }
+
+  function loop(timestamp) {
+    rafId = window.requestAnimationFrame(loop);
+    if (!running || paused || ended) {
+      draw();
+      return;
+    }
+
+    if (!lastTime) {
+      lastTime = timestamp;
+    }
+    const dt = Math.min(0.032, (timestamp - lastTime) / 1000);
+    lastTime = timestamp;
+
+    movePlayer(dt);
+    updatePatrols(dt);
+    updateHeat(dt);
+    updateHud();
+    draw();
+  }
+
+  function resetState() {
+    player = createPlayer();
+    collectedClues = new Set();
+    questioned = new Set();
+    notes = [];
+    heat = 0;
+    running = true;
+    paused = false;
+    ended = false;
+    accusationMode = false;
+    startTime = Date.now();
+    lastTime = 0;
+    resetPatrols();
+    updateHud();
+    setDynamicNote();
+    shell.setStatus("Case live.");
+    shell.togglePause(false);
+    draw();
   }
 
   function startGame() {
+    if (!rafId) {
+      rafId = window.requestAnimationFrame(loop);
+    }
     resetState();
+    shell.setMobileControls([
+      { label: "Up", onDown: () => { input.up = true; }, onUp: () => { input.up = false; } },
+      { label: "Left", onDown: () => { input.left = true; }, onUp: () => { input.left = false; } },
+      { label: "Act", onTap: interact },
+      { label: "Right", onDown: () => { input.right = true; }, onUp: () => { input.right = false; } },
+      { label: "Down", onDown: () => { input.down = true; }, onUp: () => { input.down = false; } }
+    ]);
   }
 
   function restartGame() {
     resetState();
   }
+
+  function handleKey(event, pressed) {
+    if (event.code === "ArrowUp" || event.code === "KeyW") input.up = pressed;
+    if (event.code === "ArrowDown" || event.code === "KeyS") input.down = pressed;
+    if (event.code === "ArrowLeft" || event.code === "KeyA") input.left = pressed;
+    if (event.code === "ArrowRight" || event.code === "KeyD") input.right = pressed;
+  }
+
+  window.addEventListener("keydown", (event) => {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space", "KeyW", "KeyA", "KeyS", "KeyD", "KeyE", "Digit1", "Digit2", "Digit3"].includes(event.code)) {
+      event.preventDefault();
+    }
+    handleKey(event, true);
+    if (event.code === "KeyE") {
+      interact();
+    }
+    if (event.code === "Digit1") accuse("farid");
+    if (event.code === "Digit2") accuse("meera");
+    if (event.code === "Digit3") accuse("tapan");
+  });
+
+  window.addEventListener("keyup", (event) => {
+    handleKey(event, false);
+  });
+
+  draw();
 })();

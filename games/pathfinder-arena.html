@@ -17,11 +17,12 @@
         <a class="nav-chip" href="../games.html">Back to Arcade</a>
         <div class="topbar-title">
           <h1>Pathfinder Arena</h1>
-          <p>Interactive route challenge with algorithms, walls, and level scoring.</p>
+          <p>Maze sprint where a seeker hunts you with BFS, DFS, or A* logic.</p>
         </div>
       </div>
       <div class="topbar-actions">
         <button class="arcade-button secondary" id="mute-btn" type="button">Sound On</button>
+        <button class="arcade-button secondary" id="pause-btn" type="button">Pause</button>
         <button class="arcade-button secondary" id="restart-btn" type="button">Restart Level</button>
       </div>
     </header>
@@ -29,8 +30,11 @@
     <main class="game-layout">
       <section class="game-stage-panel">
         <div class="hud" id="hud"></div>
-        <div class="dom-stage path-layout" id="game-root"></div>
-        <p class="status-line" id="status-line">Place smart walls, choose an algorithm, and solve for efficiency.</p>
+        <div class="stage-frame">
+          <canvas id="game-canvas" class="canvas-stage" width="960" height="540"></canvas>
+        </div>
+        <div class="mobile-controls" id="mobile-controls"></div>
+        <p class="status-line" id="status-line">Run the maze, collect data, and stay ahead of the seeker.</p>
       </section>
 
       <aside class="game-side-panel">
@@ -42,7 +46,7 @@
         </section>
         <section class="panel-card">
           <h3 id="note-title">Arena Notes</h3>
-          <p id="note-body">Every level has its own board. Better paths and faster solves create stronger scores.</p>
+          <p id="note-body">Each level tracks its own board. Faster clears and cleaner routes score higher.</p>
           <p class="muted-line" id="record-summary"></p>
         </section>
       </aside>
@@ -52,12 +56,12 @@
   <div class="overlay-screen" id="start-overlay">
     <div class="overlay-card wide">
       <p class="overlay-kicker">How to Play</p>
-      <h2>Build the route, then watch the search unfold.</h2>
+      <h2>Run the maze, collect nodes, and stay ahead of the seeker.</h2>
       <ul class="how-list">
-        <li>Choose a level and an algorithm.</li>
-        <li>Place a limited number of walls to improve the path.</li>
-        <li>Run the search and score based on speed, path efficiency, and bonus pickups.</li>
-        <li>Harder levels unlock as you clear the early ones.</li>
+        <li>Move with `WASD` or arrow keys across the grid.</li>
+        <li>Pick BFS, DFS, or A* before the round. The seeker uses that search style against you.</li>
+        <li>Collect every data node, then reach the exit portal.</li>
+        <li>Fast clean clears unlock the next level and save to that level board.</li>
       </ul>
       <div class="overlay-actions">
         <button class="arcade-button primary" id="start-btn" type="button">Enter Arena</button>

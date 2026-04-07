@@ -17,11 +17,12 @@
         <a class="nav-chip" href="../games.html">Back to Arcade</a>
         <div class="topbar-title">
           <h1>Signal Heist</h1>
-          <p>Turn-based infiltration with hacks, distractions, cameras, and guards.</p>
+          <p>Real-time stealth run with cameras, patrols, hack nodes, and fast resets.</p>
         </div>
       </div>
       <div class="topbar-actions">
         <button class="arcade-button secondary" id="mute-btn" type="button">Sound On</button>
+        <button class="arcade-button secondary" id="pause-btn" type="button">Pause</button>
         <button class="arcade-button secondary" id="restart-btn" type="button">Restart Level</button>
       </div>
     </header>
@@ -29,7 +30,9 @@
     <main class="game-layout">
       <section class="game-stage-panel">
         <div class="hud" id="hud"></div>
-        <div class="dom-stage heist-layout" id="game-root"></div>
+        <div class="stage-frame">
+          <canvas id="game-canvas" class="canvas-stage" width="960" height="540"></canvas>
+        </div>
         <div class="mobile-controls" id="mobile-controls"></div>
         <p class="status-line" id="status-line">Move smart, manage alert, steal the target, then reach the exit.</p>
       </section>
@@ -43,7 +46,7 @@
         </section>
         <section class="panel-card">
           <h3 id="note-title">Heist Notes</h3>
-          <p id="note-body">Every level tracks stealth score and clear time. Use hacks and waits before panic moving.</p>
+          <p id="note-body">Every level tracks stealth score and clear time. Cut cameras, bait patrols, and escape clean.</p>
           <p class="muted-line" id="record-summary"></p>
         </section>
       </aside>
@@ -53,12 +56,12 @@
   <div class="overlay-screen" id="start-overlay">
     <div class="overlay-card wide">
       <p class="overlay-kicker">How to Play</p>
-      <h2>Steal the signal and get out clean.</h2>
+      <h2>Slip in, steal the signal, then disappear before the lock closes.</h2>
       <ul class="how-list">
-        <li>Move with arrow keys, on-screen buttons, or WASD.</li>
-        <li>Use wait turns, distractions, and hack nodes to dodge patrol patterns.</li>
-        <li>Grab the target, then reach the exit without filling the alert meter.</li>
-        <li>Level progress and Top 10 boards save locally.</li>
+        <li>Move with `WASD` or arrow keys and stay outside guard paths and camera beams.</li>
+        <li>Press `E` to hack a nearby node and cut cameras for a short window.</li>
+        <li>Press `Q` to fire a distraction ping and pull patrols off line.</li>
+        <li>Steal the target, then escape through the exit with the lowest alert you can manage.</li>
       </ul>
       <div class="overlay-actions">
         <button class="arcade-button primary" id="start-btn" type="button">Start Heist</button>
